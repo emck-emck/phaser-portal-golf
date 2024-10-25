@@ -1,0 +1,8 @@
+#Ignore all node_module libraries
+node_modules/
+
+#Ignore any log file
+*.log
+
+#Ingore dist files
+dist/
