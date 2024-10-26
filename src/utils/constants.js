@@ -9,12 +9,13 @@ export const MAP_INFO = [
 
 //Number constants
 export const BALL_FORCE_MULTIPLIER = 3;
-export const BALL_LOW_SPEED = 10;
+export const BALL_LOW_SPEED = 50;
+export const BALL_STOP_SPEED = 1;
 export const COLLISION_DEBOUNCE_TIME = 50;
 export const FRICTION = 0.98;
 export const FRICTION_SAND = 0.93;
 export const GOAL_BALL_THRESHOLD = 12;
-export const GOAL_MAGNET_RANGE = 24;
+export const GOAL_MAGNET_RANGE = 16;
 export const GOAL_MAGNETIC_PULL = 2;
 export const MAX_BALL_SPEED = 1000;
 export const MWALL_SPEED = 50;

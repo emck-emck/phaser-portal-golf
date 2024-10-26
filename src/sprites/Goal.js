@@ -14,6 +14,7 @@ export default class Goal extends Phaser.Physics.Arcade.Sprite {
 
 		//Collision setup
 		this.body.setCircle(this.width / 2);
+		//this.setOrigin(0.5, 0.5);
     }
 
     update() {
@@ -21,10 +22,27 @@ export default class Goal extends Phaser.Physics.Arcade.Sprite {
     }
 
 	handleBallAtGoal(ball, goal){
+		const ballCenterX = ball.x;
+		const ballCenterY = ball.y;
+		const goalX = goal.x;
+		const goalY = goal.y;
 		//Make "magnetic pull" for ball to reach goal
 		goal.applyMagneticPull(ball);
+		console.log("===================");
+		console.log(ballCenterX);
+		console.log(ballCenterY);
+		console.log(goalX);
+		console.log(goalY);
+		console.log(goal.width);
+		console.log(goal.height);
+		console.log("===================");
 		//If speed of ball is 0 set game to finished
-		if(!ball.isBallMoving()){
+		if(!ball.isBallMoving() && 
+			ballCenterX >= goalX - goal.width/2 &&
+			ballCenterX <= goalX + goal.width/2 &&
+			ballCenterY >= goalY - goal.height/2 &&
+			ballCenterY <= goalY + goal.height/2
+		){
 			ball.setVisible(false);
 			this.scene.launch('WinScene', {
 											holeId: this.holeId, 
@@ -39,9 +57,13 @@ export default class Goal extends Phaser.Physics.Arcade.Sprite {
 
 	//Method to apply magnetic pull
     applyMagneticPull(ball) {
-        const distance = Phaser.Math.Distance.Between(this.x, this.y, ball.x, ball.y);
+		const gx = this.x;
+		const gy = this.y;
+		const bx = ball.x;
+		const by = ball.y;
+        const distance = Phaser.Math.Distance.Between(gx, gy, bx, by);
 		//Calculate the direction vector from the ball to the goal
-		const direction = new Phaser.Math.Vector2(this.x - ball.x, this.y - ball.y).normalize();
+		const direction = new Phaser.Math.Vector2(gx - bx, gy - by).normalize();
 
 		if(distance < GOAL_MAGNET_RANGE){
 			//Apply a force towards the goal
