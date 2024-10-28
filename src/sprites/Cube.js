@@ -28,21 +28,6 @@ export default class Cube extends Phaser.Physics.Arcade.Sprite {
 		return true;
 	}
 
-	waterCollision(cube, water){
-		const cubeCenterX = cube.x;
-		const cubeCenterY = cube.y;
-	
-		// Check if the center of the ball is within the bounds of the tile
-		if (cubeCenterX >= water.pixelX &&
-			cubeCenterX <= water.pixelX + water.width &&
-			cubeCenterY >= water.pixelY &&
-			cubeCenterY <= water.pixelY + water.height
-		) {
-			cube.destroy();
-		}
-		return false;
-	}
-
 	ballCollision(cube, ball){
 		const cx = (cube.body.center.x + ball.body.center.x) / 2
 		const cy = (cube.body.center.y + ball.body.center.y) / 2

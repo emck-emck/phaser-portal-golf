@@ -85,19 +85,34 @@ class GameScene extends Phaser.Scene {
 		this.map = this.make.tilemap({key: this.holeName});
 		//Tile layers
 		this.wallLayer = null;
-		this.hazardLayer = null;
+		this.groundLayer = null;
 		//Tilesets
-		this.wallTile = -1;
-		this.iWallTile = -1;
+		this.groundTile = -1;
 		this.waterTile = -1;
 		this.sandTile = -1;
+		this.wallTile = -1;
+		this.iWallTile = -1;
 
 		//Check tile layers, load if we have them
 		//ground
 		const groundLayer = this.map.getLayer('Ground_Layer');
 		if(groundLayer){
-			const groundTileset = this.map.addTilesetImage('Ground', 'ground');
-			this.map.createLayer('Ground_Layer', groundTileset);
+			//Connect images to tiles
+			this.groundTile = this.map.addTilesetImage('Ground', 'ground');
+			this.waterTile = this.map.addTilesetImage('Water', 'water');
+			this.sandTile = this.map.addTilesetImage('Sand', 'sand');
+			//Create layer
+			this.groundLayer = this.map.createLayer('Ground_Layer', [this.groundTile, this.waterTile, this.sandTile], 0, 0);
+			this.groundLayer.setCollisionByExclusion([-1]);
+			//Tile object init
+			this.groundLayer.forEachTile((tile) => {
+				if(tile.tileset === this.waterTile){
+					
+				}else if(tile.tileset === this.sandTile){
+					
+				}
+			});
+
 		}
 		//walls
 		const wallLayer = this.map.getLayer('Wall_Layer');
@@ -119,25 +134,6 @@ class GameScene extends Phaser.Scene {
 			 // Enable debug rendering for the tile layer
 			//this.debugGraphics = this.add.graphics().setAlpha(0.75);
 			//this.debugWall();
-		}
-
-		//hazards
-		const hazardLayer = this.map.getLayer('Hazard_Layer');
-		if(hazardLayer){
-			//Connect images to tiles
-			this.waterTile = this.map.addTilesetImage('Water', 'water');
-			this.sandTile = this.map.addTilesetImage('Sand', 'sand');
-			//Create layer
-			this.hazardLayer = this.map.createLayer('Hazard_Layer', [this.waterTile, this.sandTile], 0, 0);
-			this.hazardLayer.setCollisionByExclusion([-1]);
-			//Tile object init
-			this.hazardLayer.forEachTile((tile) => {
-				if(tile.tileset === this.waterTile){
-					
-				}else if(tile.tileset === this.sandTile){
-					
-				}
-			});
 		}
 
 		//Find Object Positions
@@ -259,9 +255,10 @@ class GameScene extends Phaser.Scene {
 		});
 	
 		//Collider init
+		//Hazard collision handled in friction function
+
 		//Ball colliders
 		this.physics.add.collider(this.ball, this.wallLayer, this.ball.wallCollision);
-		this.physics.add.collider(this.ball, this.hazardLayer, null, this.ball.hazardCollision); // fix me
 		this.physics.add.collider(this.ball, this.goal, null, this.goal.handleBallAtGoal.bind(this));
 		this.physics.add.collider(this.ball, this.portalGroup, null, this.ball.portalCollision);
 
@@ -274,7 +271,6 @@ class GameScene extends Phaser.Scene {
 		this.cubeGroup.children.iterate((c) => {
 			if (c) {
 				this.physics.add.collider(c, this.wallLayer, c.wallCollision);
-				this.physics.add.collider(c, this.hazardLayer, null, c.waterCollision);
 				this.physics.add.collider(c, this.ball, null, c.ballCollision);
 				this.physics.add.collider(c, this.ppGroup, null, c.PPCollision);
 				this.physics.add.collider(c, this.portalGroup, null, c.portalCollision);

@@ -29,9 +29,9 @@ export default class PressurePlate extends Phaser.Physics.Arcade.Sprite {
 							//Reactivate the water beneath the bridge
 							const tileX = this.ctrl[i].scene.map.worldToTileX(this.ctrl[i].x);
 							const tileY = this.ctrl[i].scene.map.worldToTileY(this.ctrl[i].y);
-							const wTile = this.ctrl[i].scene.hazardLayer.getTileAt(tileX, tileY);
-							if(wTile){
-								wTile.setCollision(true);
+							const tile = this.ctrl[i].scene.groundLayer.getTileAt(tileX, tileY);
+							if(!tile){
+								this.scene.groundLayer.putTileAt(this.ctrl[i].tileBeneathIndex, tileX, tileY);
 							}
 						}
 						if(this.ctrl[i] instanceof DisappearingWall){
@@ -54,9 +54,9 @@ export default class PressurePlate extends Phaser.Physics.Arcade.Sprite {
 					//Deactivate the water beneath the bridge
 					const tileX = pp.ctrl[i].scene.map.worldToTileX(pp.ctrl[i].x);
 					const tileY = pp.ctrl[i].scene.map.worldToTileY(pp.ctrl[i].y);
-					const wTile = pp.ctrl[i].scene.hazardLayer.getTileAt(tileX, tileY);
-					if(wTile){
-						wTile.setCollision(false);
+					const tile = pp.ctrl[i].scene.groundLayer.getTileAt(tileX, tileY);
+					if(tile){
+						pp.scene.groundLayer.removeTileAt(tileX, tileY);
 					}
 				}
 				if(pp.ctrl[i] instanceof DisappearingWall){
