@@ -21,11 +21,6 @@ export function getCollisionSide(x, y, wall) {
 
 	var wx = wall.pixelX + wall.width / 2;
 	var wy = wall.pixelY + wall.height / 2;
-
-	if(!wx || !wy){
-		wx = wall.x;
-		wy = wall.y;
-	}
 	
 	var dx = x - wx;
 	var dy = y - wy;

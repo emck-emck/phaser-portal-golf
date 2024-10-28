@@ -288,7 +288,7 @@ class GameScene extends Phaser.Scene {
 		this.movingWallGroup.children.iterate((m) => {
 			if (m) {
 				this.physics.add.collider(m, this.wallLayer, null, m.wallCollision);
-				this.physics.add.collider(m, this.ball);
+				this.physics.add.collider(m, this.ball, m.ballCollision);
 				this.physics.add.collider(m, this.ppGroup, null, m.PPCollision);
 				this.physics.add.collider(m, this.portalGroup, null, m.portalCollision);
 				this.physics.add.collider(m, this.cubeGroup, null, m.wallCollision);

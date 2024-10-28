@@ -25,9 +25,11 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
 		//Class variables
 		this.scene = scene;
-		this.lastSpot = {x: x, y: y};
+		this.lastSpot = this.getCenter();
 		this.mouseDownCoords = {};
 		this.lastPortal = Date.now();
+
+		this.timer = Date.now();
     }
 
     update() {
@@ -39,14 +41,22 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
 		//Friction stuff
         this.doBallFriction();
-		this.doBallStop();
+
+		if(Date.now() >= this.timer + 250){
+			console.log(this.body.velocity);
+			this.timer = Date.now();
+		}
     }
 
 	//Handles the ball velocity when a shot is made
 	doBallShoot(pointer){
+		//Handle off-screen problems
 		if(isEmpty(this.mouseDownCoords)){
 			return;
 		}
+		//Set last location ball was on the map (for water traps)
+		this.lastSpot = this.getCenter();
+
 		var forcex = pointer.x - this.mouseDownCoords.x;
 		var forcey = pointer.y - this.mouseDownCoords.y;
 	
@@ -96,9 +106,15 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 				ballCenterY >= hazard.pixelY &&
 				ballCenterY <= hazard.pixelY + hazard.height
 			) {
-				ball.setVelocity(0);
-				ball.x = ball.lastSpot.x;
-				ball.y = ball.lastSpot.y;
+				//Reset the ball
+				ball.setPosition(ball.lastSpot.x, ball.lastSpot.y);
+				ball.body.stop();
+				//Disable and shortly after re-enable collision for the ball
+				//Keeps body inert if the ball was pushed into the water
+				ball.body.checkCollision.none = true;
+				setTimeout(() => {
+					ball.body.checkCollision.none = false;
+				}, 10);
 			}
 		}else if(hazard.tileset === ball.scene.sandTile){
 			ball.doBallFriction();
@@ -106,20 +122,14 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	wallCollision(ball, wall){
-		console.log("Ball hit wall at coord " + wall.x + " ," + wall.y);
+		
 	}
 
 	//Handles ball friction
 	doBallFriction(){
 		doFriction(this);
-	}
-
-	//Fully stops the ball once it reaches a certain low speed
-	doBallStop(){
-		if(!this.isBallMoving() && this.body.velocity.x != 0 && this.body.velocity.y != 0){
-			this.body.velocity.x = 0;
-			this.body.velocity.y = 0;
-			this.lastSpot = this.getCenter();
+		if(!this.isBallMoving()){
+			this.body.stop();
 		}
 	}
 

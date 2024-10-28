@@ -68,4 +68,8 @@ export default class MovingWall extends Phaser.Physics.Arcade.Sprite {
 		}
 	}
 
+	ballCollision(mWall, ball){
+
+	}
+
 }
