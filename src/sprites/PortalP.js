@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import {portalPlacement} from '../utils/portalUtils.js';
 import {PROJECTILE, COLLISION_DEBOUNCE_TIME} from '../utils/constants.js'
 import Portal from './Portal.js';
 
@@ -17,7 +18,7 @@ export default class PortalP extends Phaser.Physics.Arcade.Sprite {
 
 		//Collision setup
 		this.body.setCircle(this.width / 2);
-		this.scene.physics.add.collider(this, this.scene.wallLayer, this.wallCollision.bind(this));
+		this.scene.physics.add.collider(this, this.scene.wallLayer, this.wallCollision);
 		this.scene.ppGroup.add(this);
     }
 
@@ -26,17 +27,25 @@ export default class PortalP extends Phaser.Physics.Arcade.Sprite {
     }
 
 	wallCollision(pp, wall){
-		if(wall.tileset === pp.scene.wallTile){
-			const currentTime = Date.now();
-			if (currentTime - PortalP.lastCollisionTime >= COLLISION_DEBOUNCE_TIME) {
-				new Portal(this.scene, this.body.center.x, this.body.center.y, this.key, wall);
-				PortalP.lastCollisionTime = currentTime;
-				this.destroy();
+		if(pp.scene){
+			if(wall.tileset === pp.scene.wallTile){
+				const currentTime = Date.now();
+				if (currentTime - PortalP.lastCollisionTime >= COLLISION_DEBOUNCE_TIME) {
+					//Get valid coords for portal
+					const coords = portalPlacement(pp.body.center.x, pp.body.center.y, wall, pp.scene.wallLayer);
+					//Destroy old portals
+					Portal.destroyByProperty(pp.scene, pp.key);
+					//Create new portal
+					
+					PortalP.lastCollisionTime = currentTime;
+					if(coords){
+						new Portal(pp.scene, coords, pp.key);
+					}
+				}
+				pp.destroy();
+			}else if(wall.tileset === pp.scene.iWallTile){
+				pp.destroy();
 			}
-		}else if(wall.tileset === pp.scene.iWallTile){
-			pp.destroy();
-		}else{
-			throw new error("Something unexpected in the wall layer");
 		}
 	}
 }

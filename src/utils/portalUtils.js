@@ -1,4 +1,5 @@
-import {OFFSET_PORTAL_BALL} from './constants.js';
+import {HORIZONTAL, OFFSET_PORTAL_BALL, OFFSET_PORTAL_PLACE, VERTICAL} from './constants.js';
+import {getNearestValidWall, getCollisionSide} from './wallUtils.js';
 
 //Detects empty object (as in the {} object)
 export function isEmpty(obj) {
@@ -77,14 +78,14 @@ export function teleportObject(object, exitPortal){
 
 //Change the object's velocity based on the angle calculated (thanks ChatGPT)
 export function setObjectVelocityAfterPortal(object, velRotation){
-	console.log("===============================");
-	console.log("Current velocity:");
-	console.log(object.body.velocity);
+	// console.log("===============================");
+	// console.log("Current velocity:");
+	// console.log(object.body.velocity);
 
 	//Convert angle to radians
 	var angleRad = velRotation * Math.PI / 180;
 
-	console.log("Rotation: " + velRotation);
+	// console.log("Rotation: " + velRotation);
 
 	// Get current velocity
 	const currentVelocity = object.body.velocity;
@@ -96,16 +97,84 @@ export function setObjectVelocityAfterPortal(object, velRotation){
 	// Set new velocity
 	object.setVelocity(newVelocityX, newVelocityY);
 
-	console.log("New velocity:");
-	console.log(object.body.velocity);
-	console.log("===============================");
+	// console.log("New velocity:");
+	// console.log(object.body.velocity);
+	// console.log("===============================");
 
 	return object.body.velocity;
 }
 
-/*
-Horizontal + Horizontal -- X breaks
-Vertical + Vertical -- Y breaks
-Horizontal + Vertical -- X breaks
-Vertical + Horizontal -- Y breaks
-*/
+//Returns the x and y coordinates of where the portal should be placed or throws error if invalid
+//Also returns orientation of the portal (horizontal or vertical)
+//Return collision side as well; this is done here to indent the portal a bit out of the wall
+export function portalPlacement(x, y, wall, wallLayer){
+	const nearestWall = getNearestValidWall(x, y, wall, wallLayer);
+	const collisionSide = getCollisionSide(x, y, wall);
+
+	console.log("Portal place collision side " + collisionSide);
+
+	if(!nearestWall){
+		throw new Error('Portal Cancel, no nearest wall');
+	}
+	if(!collisionSide){
+		throw new error('Portal Cancel, no collision side detected');
+	}
+
+	//Determine if connection is horizontal or vertical
+	if(wall.x == nearestWall.x){ // vertical
+		if(wall.y > nearestWall.y){
+			if(collisionSide == 'left'){
+				return {x: (nearestWall.pixelX + nearestWall.width/2 - OFFSET_PORTAL_PLACE), 
+						y: (nearestWall.pixelY + nearestWall.height),
+						orientation: VERTICAL,
+						collisionSide: collisionSide};
+			}else if(collisionSide == 'right'){
+				return {x: (nearestWall.pixelX + nearestWall.width/2 + OFFSET_PORTAL_PLACE), 
+						y: (nearestWall.pixelY + nearestWall.height),
+						orientation: VERTICAL,
+						collisionSide: collisionSide};
+			}
+		}else{
+			if(collisionSide == 'left'){
+				return {x: (wall.pixelX + wall.width/2 - OFFSET_PORTAL_PLACE), 
+						y: (wall.pixelY + wall.height),
+						orientation: VERTICAL,
+						collisionSide: collisionSide};
+			}else if(collisionSide == 'right'){
+				return {x: (wall.pixelX + wall.width/2 + OFFSET_PORTAL_PLACE), 
+						y: (wall.pixelY + wall.height),
+						orientation: VERTICAL,
+						collisionSide: collisionSide};
+			}
+			
+		}
+	}else if(wall.y == nearestWall.y){ //horizontal
+		if(wall.x > nearestWall.x){
+			if(collisionSide == 'top'){
+				return {x: (nearestWall.pixelX + nearestWall.width), 
+						y: (nearestWall.pixelY + nearestWall.height/2 - OFFSET_PORTAL_PLACE),
+						orientation: HORIZONTAL,
+						collisionSide: collisionSide};
+			}else if(collisionSide == 'bottom'){
+				return {x: (nearestWall.pixelX + nearestWall.width), 
+						y: (nearestWall.pixelY + nearestWall.height/2 + OFFSET_PORTAL_PLACE),
+						orientation: HORIZONTAL,
+						collisionSide: collisionSide};
+			}
+		}else{
+			if(collisionSide == 'top'){
+				return {x: (wall.pixelX + wall.width), 
+						y: (wall.pixelY + nearestWall.height/2 - OFFSET_PORTAL_PLACE),
+						orientation: HORIZONTAL,
+						collisionSide: collisionSide};
+			}else if(collisionSide == 'bottom'){
+				return {x: (wall.pixelX + wall.width), 
+						y: (wall.pixelY + nearestWall.height/2 + OFFSET_PORTAL_PLACE),
+						orientation: HORIZONTAL,
+						collisionSide: collisionSide};
+			}
+		}
+	}else{
+		throw new Error('Portal Cancel');
+	}
+}
