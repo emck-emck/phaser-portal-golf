@@ -22,6 +22,7 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		//Collision setup
 		this.setBounce(1);
 		this.body.setCircle(this.width / 2);
+		this.setOrigin(0.5, 0.5);
 
 		//Class variables
 		this.scene = scene;
@@ -29,6 +30,7 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		this.mouseDownCoords = {};
 		this.lastPortal = Date.now();
 
+		//Debug variable
 		this.timer = Date.now();
     }
 
@@ -41,10 +43,13 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
 		//Friction stuff
         this.doBallFriction();
-
-		if(Date.now() >= this.timer + 250){
-			console.log(this.body.velocity);
+	
+		//Timer debug
+		if(Date.now() >= this.timer + 1000){
 			this.timer = Date.now();
+			//Debug code goes here
+			// console.log(this.x);
+			// console.log(this.y);
 		}
     }
 
@@ -93,32 +98,6 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 			return portal.objectPortalCollision(ball, portal);
 		}
 		return true;
-	}
-
-	hazardCollision(ball, hazard){
-		if(hazard.tileset === ball.scene.waterTile){
-			const ballCenterX = ball.x;
-			const ballCenterY = ball.y;
-		
-			// Check if the center of the ball is within the bounds of the tile
-			if (ballCenterX >= hazard.pixelX &&
-				ballCenterX <= hazard.pixelX + hazard.width &&
-				ballCenterY >= hazard.pixelY &&
-				ballCenterY <= hazard.pixelY + hazard.height
-			) {
-				//Reset the ball
-				ball.setPosition(ball.lastSpot.x, ball.lastSpot.y);
-				ball.body.stop();
-				//Disable and shortly after re-enable collision for the ball
-				//Keeps body inert if the ball was pushed into the water
-				ball.body.checkCollision.none = true;
-				setTimeout(() => {
-					ball.body.checkCollision.none = false;
-				}, 10);
-			}
-		}else if(hazard.tileset === ball.scene.sandTile){
-			ball.doBallFriction();
-		}
 	}
 
 	wallCollision(ball, wall){

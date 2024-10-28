@@ -28,14 +28,6 @@ export default class Goal extends Phaser.Physics.Arcade.Sprite {
 		const goalY = goal.y;
 		//Make "magnetic pull" for ball to reach goal
 		goal.applyMagneticPull(ball);
-		console.log("===================");
-		console.log(ballCenterX);
-		console.log(ballCenterY);
-		console.log(goalX);
-		console.log(goalY);
-		console.log(goal.width);
-		console.log(goal.height);
-		console.log("===================");
 		//If speed of ball is 0 set game to finished
 		if(!ball.isBallMoving() && 
 			ballCenterX >= goalX - goal.width/2 &&
