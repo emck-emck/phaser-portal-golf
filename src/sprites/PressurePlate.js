@@ -4,7 +4,7 @@ import DisappearingWall from './DisappearingWall.js';
 
 export default class PressurePlate extends Phaser.Physics.Arcade.Sprite {
 
-    constructor(scene, x, y, code, ctrl) {
+    constructor(scene, x, y, code) {
 		//Phaser setup
         super(scene, x, y, 'pressureplate');
         scene.add.existing(this);
@@ -12,7 +12,7 @@ export default class PressurePlate extends Phaser.Physics.Arcade.Sprite {
 
 		this.scene = scene;
 		this.code = code;
-		this.ctrl = ctrl;
+		this.ctrl = [];
 		this.isOn = false;
 		this.timeOn = 0;
     }
@@ -22,21 +22,19 @@ export default class PressurePlate extends Phaser.Physics.Arcade.Sprite {
 			if(!this.scene.physics.overlap(this)){
 				this.isOn = false;
 				if(this.ctrl && this.ctrl.length){ //If ctrl is an array
-					if(this.ctrl[0] instanceof Bridge){
-						for(var i = 0; i < this.ctrl.length; i++){
+					for(var i = 0; i < this.ctrl.length; i++){
+						if(this.ctrl[i] instanceof Bridge){
 							this.ctrl[i].disableBody(true, true); //Hide the bridge
 
 							//Reactivate the water beneath the bridge
 							const tileX = this.ctrl[i].scene.map.worldToTileX(this.ctrl[i].x);
 							const tileY = this.ctrl[i].scene.map.worldToTileY(this.ctrl[i].y);
-							const wTile = this.ctrl[i].scene.water.getTileAt(tileX, tileY);
+							const wTile = this.ctrl[i].scene.hazardLayer.getTileAt(tileX, tileY);
 							if(wTile){
 								wTile.setCollision(true);
 							}
 						}
-					}
-					if(this.ctrl[0] instanceof DisappearingWall){
-						for(var i = 0; i < this.ctrl.length; i++){
+						if(this.ctrl[i] instanceof DisappearingWall){
 							this.ctrl[i].enableBody(false, this.ctrl[i].x, this.ctrl[i].y, true, true);
 						}
 					}
@@ -49,27 +47,23 @@ export default class PressurePlate extends Phaser.Physics.Arcade.Sprite {
 		pp.isOn = true;
 		pp.timeOn = Date.now();
 		if(pp.ctrl && pp.ctrl.length){ //If ctrl is an array
-			if(pp.ctrl[0] instanceof Bridge){
-				for(var i = 0; i < pp.ctrl.length; i++){
+			for(var i = 0; i < pp.ctrl.length; i++){
+				if(pp.ctrl[i] instanceof Bridge){
 					pp.ctrl[i].enableBody(false, pp.ctrl[i].x, pp.ctrl[i].y, true, true); //Display the bridge
 					
 					//Deactivate the water beneath the bridge
 					const tileX = pp.ctrl[i].scene.map.worldToTileX(pp.ctrl[i].x);
 					const tileY = pp.ctrl[i].scene.map.worldToTileY(pp.ctrl[i].y);
-					const wTile = pp.ctrl[i].scene.water.getTileAt(tileX, tileY);
+					const wTile = pp.ctrl[i].scene.hazardLayer.getTileAt(tileX, tileY);
 					if(wTile){
 						wTile.setCollision(false);
 					}
 				}
-				return false;
-			}
-			if(pp.ctrl[0] instanceof DisappearingWall){
-				for(var i = 0; i < pp.ctrl.length; i++){
+				if(pp.ctrl[i] instanceof DisappearingWall){
 					pp.ctrl[i].disableBody(true, true);
 				}
-				return false;
 			}
-
 		}
+		return false;
 	}
 }

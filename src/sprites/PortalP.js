@@ -17,8 +17,7 @@ export default class PortalP extends Phaser.Physics.Arcade.Sprite {
 
 		//Collision setup
 		this.body.setCircle(this.width / 2);
-		this.scene.physics.add.collider(this, this.scene.walls, this.handleWallCollision.bind(this));
-		this.scene.physics.add.collider(this, this.scene.iWalls, this.handleInactiveWallCollision.bind(this));
+		this.scene.physics.add.collider(this, this.scene.wallLayer, this.wallCollision.bind(this));
 		this.scene.ppGroup.add(this);
     }
 
@@ -26,18 +25,18 @@ export default class PortalP extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-	//Handles when the portal gun hits a wall
-	handleWallCollision(pp, wall){
-		const currentTime = Date.now();
-		if (currentTime - PortalP.lastCollisionTime >= COLLISION_DEBOUNCE_TIME) {
-			new Portal(this.scene, this.body.center.x, this.body.center.y, this.key, wall);
-			PortalP.lastCollisionTime = currentTime;
-			this.destroy();
+	wallCollision(pp, wall){
+		if(wall.tileset === pp.scene.wallTile){
+			const currentTime = Date.now();
+			if (currentTime - PortalP.lastCollisionTime >= COLLISION_DEBOUNCE_TIME) {
+				new Portal(this.scene, this.body.center.x, this.body.center.y, this.key, wall);
+				PortalP.lastCollisionTime = currentTime;
+				this.destroy();
+			}
+		}else if(wall.tileset === pp.scene.iWallTile){
+			pp.destroy();
+		}else{
+			throw new error("Something unexpected in the wall layer");
 		}
 	}
-
-	handleInactiveWallCollision(pp){
-		this.destroy();
-	}
-
 }

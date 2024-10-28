@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import PortalP from './PortalP.js';
 import {isEmpty} from '../utils/portalUtils.js';
 import {doFriction} from '../utils/utils.js';
-import {PP_SPEED, BALL_FORCE_MULTIPLIER, BALL_LOW_SPEED, MAX_BALL_SPEED} from '../utils/constants.js';
+import {PP_SPEED, BALL_FORCE_MULTIPLIER, BALL_LOW_SPEED, BALL_STOP_SPEED, MAX_BALL_SPEED} from '../utils/constants.js';
 
 export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
@@ -85,19 +85,23 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		return true;
 	}
 
-	waterCollision(ball, water){
-		const ballCenterX = ball.x;
-		const ballCenterY = ball.y;
-	
-		// Check if the center of the ball is within the bounds of the tile
-		if (ballCenterX >= water.pixelX &&
-			ballCenterX <= water.pixelX + water.width &&
-			ballCenterY >= water.pixelY &&
-			ballCenterY <= water.pixelY + water.height
-		) {
-			ball.setVelocity(0);
-			ball.x = ball.lastSpot.x;
-			ball.y = ball.lastSpot.y;
+	hazardCollision(ball, hazard){
+		if(hazard.tileset === ball.scene.waterTile){
+			const ballCenterX = ball.x;
+			const ballCenterY = ball.y;
+		
+			// Check if the center of the ball is within the bounds of the tile
+			if (ballCenterX >= hazard.pixelX &&
+				ballCenterX <= hazard.pixelX + hazard.width &&
+				ballCenterY >= hazard.pixelY &&
+				ballCenterY <= hazard.pixelY + hazard.height
+			) {
+				ball.setVelocity(0);
+				ball.x = ball.lastSpot.x;
+				ball.y = ball.lastSpot.y;
+			}
+		}else if(hazard.tileset === ball.scene.sandTile){
+			ball.doBallFriction();
 		}
 	}
 
@@ -121,7 +125,7 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
 	//Returns whether or not the ball is in motion
 	isBallMoving(){
-		if(Math.abs(this.body.velocity.x) > 0.1 || Math.abs(this.body.velocity.y) > 0.1){
+		if(Math.abs(this.body.velocity.x) > BALL_STOP_SPEED || Math.abs(this.body.velocity.y) > BALL_STOP_SPEED){
 			return true;
 		}
 		return false;

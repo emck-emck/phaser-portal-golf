@@ -57,14 +57,14 @@ export function getNearestValidWall(x, y, wall, wallLayer){
 	//Check left
 	if(wallx > 0){
 		var leftTile = wallLayer.getTileAt(wallx - 1, wally);
-		if (leftTile && leftTile.index === tileId) {
+		if (leftTile && leftTile.index === tileId ){
 			adjacentTiles.push(leftTile);
 		}
 	}
 	//Check right
 	if(wallx < wallLayer.layer.width - 1){
 		var rightTile = wallLayer.getTileAt(wallx + 1, wally);
-		if (rightTile && rightTile.index === tileId) {
+		if (rightTile && rightTile.index === tileId){
 			adjacentTiles.push(rightTile);
 		}
 	}
@@ -72,7 +72,7 @@ export function getNearestValidWall(x, y, wall, wallLayer){
 	//Check up
 	if(wally > 0){
 		var upTile = wallLayer.getTileAt(wallx, wally - 1);
-		if (upTile && upTile.index === tileId) {
+		if (upTile && upTile.index === tileId){
 			adjacentTiles.push(upTile);
 		}
 	}
@@ -80,7 +80,7 @@ export function getNearestValidWall(x, y, wall, wallLayer){
 	//Check down
 	if(wally < wallLayer.layer.height - 1){
 		var downTile = wallLayer.getTileAt(wallx, wally + 1);
-		if (downTile && downTile.index === tileId) {
+		if (downTile && downTile.index === tileId){
 			adjacentTiles.push(downTile);
 		}
 	}

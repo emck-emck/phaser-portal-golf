@@ -8,10 +8,12 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y, key, wall) {
 		//Initial setup
-		const coords = portalPlacement(x, y, wall, scene.walls);
+		const coords = portalPlacement(x, y, wall, scene.wallLayer);
 
 		//Delete portals of the same colour other than this one
 		Portal.destroyByProperty(scene, key);
+
+		console.log(coords);
 
 		//Phaser setup (Object init)
         super(scene, coords.x, coords.y, (key + coords.orientation));
@@ -39,7 +41,7 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 		Portal.instances[key] = this;
 
 		//Set Wall Colliders
-		setPortalWallColliders(this.scene.walls, Portal.instances);
+		setPortalWallColliders(this.scene.wallLayer, Portal.instances);
     }
 
 	static destroyByProperty(s, key) {
@@ -47,7 +49,7 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 		if (instance) {
 			instance.destroy();
 			delete Portal.instances[key];
-			setPortalWallColliders(s.walls, Portal.instances);
+			setPortalWallColliders(s.wallLayer, Portal.instances);
 		}
 	}
 
