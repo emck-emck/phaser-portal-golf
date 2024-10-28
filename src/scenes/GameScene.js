@@ -128,10 +128,10 @@ class GameScene extends Phaser.Scene {
 			this.waterTile = this.map.addTilesetImage('Water', 'water');
 			this.sandTile = this.map.addTilesetImage('Sand', 'sand');
 			//Create layer
-			this.hazards = this.map.createLayer('Hazard_Layer', [this.waterTile, this.sandTile], 0, 0);
-			this.hazards.setCollisionByExclusion([-1]);
+			this.hazardLayer = this.map.createLayer('Hazard_Layer', [this.waterTile, this.sandTile], 0, 0);
+			this.hazardLayer.setCollisionByExclusion([-1]);
 			//Tile object init
-			this.hazards.forEachTile((tile) => {
+			this.hazardLayer.forEachTile((tile) => {
 				if(tile.tileset === this.waterTile){
 					
 				}else if(tile.tileset === this.sandTile){
@@ -191,7 +191,10 @@ class GameScene extends Phaser.Scene {
 						break;
 					case 'mwall':
 						// mWall init
-						const isHorizontal = object.properties.find(prop => prop.name === 'horizontal').value;
+						var isHorizontal = true;
+						if(object.properties.find(prop => prop.name === 'horizontal')){
+							isHorizontal = object.properties.find(prop => prop.name === 'horizontal').value;
+						}
 						const mWall = new MovingWall(this, object.x, object.y, MWALL_SPEED, isHorizontal);
 
 						this.movingWallGroup.add(mWall);
@@ -218,31 +221,11 @@ class GameScene extends Phaser.Scene {
 						b.disableBody(true, true);
 						break;
 					case 'press':
-						// Pressure pate init
-						
+						// Pressure pate init	
 						code = object.properties.find(prop => prop.name === 'code').value;
-						var objs = [];
-
-						//Finds the disappearing walls corresponding with this plate
-						this.disappearingWallGroup.children.iterate((dw) => {
-							if (dw) {
-								if(dw.code == code){
-									objs.push(dw);
-								}
-							}
-						});
-
-						this.bridgeGroup.children.iterate((b) => {
-							if(b){
-								if(b.code == code){
-									objs.push(b);
-								}
-							}
-						});
-
-						const press = new PressurePlate(this, object.x, object.y, code, objs);
+						const press = new PressurePlate(this, object.x, object.y, code);
 						this.pressurePlateGroup.add(press);
-						//press.setImmovable(true);
+						press.setImmovable(true);
 						press.setDepth(0);
 						break;
 					default:
@@ -250,11 +233,35 @@ class GameScene extends Phaser.Scene {
 				}
 			});
 		}
+
+		//Link pressure plates to objects
+		this.pressurePlateGroup.children.iterate((press) => {
+			if (press) {
+				var objs = [];
+				const code = press.code;
+				//Finds the objects corresponding with this plate
+				this.disappearingWallGroup.children.iterate((dw) => {
+					if (dw) {
+						if(dw.code == code){
+							objs.push(dw);
+						}
+					}
+				});
+				this.bridgeGroup.children.iterate((b) => {
+					if(b){
+						if(b.code == code){
+							objs.push(b);
+						}
+					}
+				});
+				press.ctrl = objs;
+			}
+		});
 	
 		//Collider init
 		//Ball colliders
 		this.physics.add.collider(this.ball, this.wallLayer, this.ball.wallCollision);
-		this.physics.add.collider(this.ball, this.hazardLayer, null, this.ball.waterCollision); // fix me
+		this.physics.add.collider(this.ball, this.hazardLayer, null, this.ball.hazardCollision); // fix me
 		this.physics.add.collider(this.ball, this.goal, null, this.goal.handleBallAtGoal.bind(this));
 		this.physics.add.collider(this.ball, this.portalGroup, null, this.ball.portalCollision);
 
@@ -266,9 +273,8 @@ class GameScene extends Phaser.Scene {
 		//Cube colliders
 		this.cubeGroup.children.iterate((c) => {
 			if (c) {
-				this.physics.add.collider(c, this.walls, c.wallCollision);
-				this.physics.add.collider(c, this.iWalls, c.wallCollision);
-				this.physics.add.collider(c, this.water, null, c.waterCollision);
+				this.physics.add.collider(c, this.wallLayer, c.wallCollision);
+				this.physics.add.collider(c, this.hazardLayer, null, c.waterCollision);
 				this.physics.add.collider(c, this.ball, null, c.ballCollision);
 				this.physics.add.collider(c, this.ppGroup, null, c.PPCollision);
 				this.physics.add.collider(c, this.portalGroup, null, c.portalCollision);
@@ -281,8 +287,7 @@ class GameScene extends Phaser.Scene {
 		//Moving Wall Colliders
 		this.movingWallGroup.children.iterate((m) => {
 			if (m) {
-				this.physics.add.collider(m, this.walls, null, m.wallCollision);
-				this.physics.add.collider(m, this.iWalls, null, m.wallCollision);
+				this.physics.add.collider(m, this.wallLayer, null, m.wallCollision);
 				this.physics.add.collider(m, this.ball);
 				this.physics.add.collider(m, this.ppGroup, null, m.PPCollision);
 				this.physics.add.collider(m, this.portalGroup, null, m.portalCollision);
@@ -293,11 +298,11 @@ class GameScene extends Phaser.Scene {
 		});
 
 		//Pressure Plate Colliders
-		this.pressurePlateGroup.children.iterate((pp) => {
-			if (pp) {
-				this.physics.add.collider(pp, this.ball, null, pp.objectOnPlate);
-				this.physics.add.collider(pp, this.cubeGroup, null, pp.objectOnPlate);
-				this.physics.add.collider(pp, this.movingWallGroup, null, pp.objectOnPlate);
+		this.pressurePlateGroup.children.iterate((press) => {
+			if (press) {
+				this.physics.add.collider(press, this.ball, null, press.objectOnPlate);
+				this.physics.add.collider(press, this.cubeGroup, null, press.objectOnPlate);
+				this.physics.add.collider(press, this.movingWallGroup, null, press.objectOnPlate);
 			}
 		});
 
@@ -323,9 +328,9 @@ class GameScene extends Phaser.Scene {
 			}
 		});
 		//Pressure plate detect
-		this.pressurePlateGroup.children.iterate((pp) => {
-			if (pp) {
-				pp.update();
+		this.pressurePlateGroup.children.iterate((press) => {
+			if (press) {
+				press.update();
 			}
 		});
 		//Moving wall update

@@ -85,19 +85,23 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		return true;
 	}
 
-	waterCollision(ball, water){
-		const ballCenterX = ball.x;
-		const ballCenterY = ball.y;
-	
-		// Check if the center of the ball is within the bounds of the tile
-		if (ballCenterX >= water.pixelX &&
-			ballCenterX <= water.pixelX + water.width &&
-			ballCenterY >= water.pixelY &&
-			ballCenterY <= water.pixelY + water.height
-		) {
-			ball.setVelocity(0);
-			ball.x = ball.lastSpot.x;
-			ball.y = ball.lastSpot.y;
+	hazardCollision(ball, hazard){
+		if(hazard.tileset === ball.scene.waterTile){
+			const ballCenterX = ball.x;
+			const ballCenterY = ball.y;
+		
+			// Check if the center of the ball is within the bounds of the tile
+			if (ballCenterX >= hazard.pixelX &&
+				ballCenterX <= hazard.pixelX + hazard.width &&
+				ballCenterY >= hazard.pixelY &&
+				ballCenterY <= hazard.pixelY + hazard.height
+			) {
+				ball.setVelocity(0);
+				ball.x = ball.lastSpot.x;
+				ball.y = ball.lastSpot.y;
+			}
+		}else if(hazard.tileset === ball.scene.sandTile){
+			ball.doBallFriction();
 		}
 	}
 
