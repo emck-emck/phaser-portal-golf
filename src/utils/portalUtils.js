@@ -1,4 +1,4 @@
-import {HORIZONTAL, OFFSET_PORTAL_BALL, OFFSET_PORTAL_PLACE, VERTICAL} from './constants.js';
+import {HORIZONTAL, OFFSET_PORTAL_BALL, OFFSET_PORTAL_PLACE, TIMEOUT_LONG, VERTICAL} from './constants.js';
 import {getNearestValidWall, getCollisionSide} from './wallUtils.js';
 
 //Detects empty object (as in the {} object)
@@ -76,6 +76,52 @@ export function teleportObject(object, exitPortal){
 	}
 }
 
+export function teleportMWall(m, exitPortal){
+	m.x = exitPortal.x;
+	m.y = exitPortal.y;
+
+	// Code to temporarily disable walls overlapping with new mWall position
+	const mw = m.width;
+	const mh = m.height;
+	const mx = m.x - mw/2;
+	const my = m.y - mh/2;
+	const tiles = m.scene.wallLayer.getTilesWithinWorldXY(mx, my, mw, mh);
+
+	tiles.forEach(tile => {
+		
+		if(tile && tile.index !== -1){
+			const tileX = tile.x;
+			const tileY = tile.y;
+			const idx = tile.index;
+			m.scene.wallLayer.removeTileAt(tileX, tileY);
+			m.scene.time.delayedCall(TIMEOUT_LONG, () => {
+				const t = m.scene.wallLayer.putTileAt(idx, tileX, tileY);
+				t.setCollision(true);
+			});
+		}
+	});
+
+	// tiles.forEach(tile => {
+		
+		// if (tile && tile.index !== -1) {
+			// console.log(tile);
+			// tile.properties = {collides: false};
+			// tile.setVisible(false);
+			
+		// }
+	// });
+	// m.scene.wallLayer.setCollisionByProperty({collides: true});
+	// m.scene.time.delayedCall(TIMEOUT_LONG, () => {
+		// tiles.forEach(tile => {
+			// if (tile && tile.index !== -1) {
+				// tile.properties = {collides: true};;
+				// tile.setVisible(true);
+			// }
+		// });
+		// m.scene.wallLayer.setCollisionByProperty({collides: true});
+	// });
+}
+
 //Change the object's velocity based on the angle calculated (thanks ChatGPT)
 export function setObjectVelocityAfterPortal(object, velRotation){
 	// console.log("===============================");
@@ -110,8 +156,6 @@ export function setObjectVelocityAfterPortal(object, velRotation){
 export function portalPlacement(x, y, wall, wallLayer){
 	const nearestWall = getNearestValidWall(x, y, wall, wallLayer);
 	const collisionSide = getCollisionSide(x, y, wall);
-
-	console.log("Portal place collision side " + collisionSide);
 
 	if(!nearestWall){
 		throw new Error('Portal Cancel, no nearest wall');

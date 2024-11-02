@@ -27,11 +27,3 @@ const config = {
 
 //RUNS THE GAME
 const game = new Phaser.Game(config);
-
-/*
-Things to fix
--Goal-Ball Interaction
--Ball-Cube Interaction
--Glitch:
-	Portal placement can fail and place invisible portal at portal shoot point (at least I think that's what happened)
-*/

@@ -39,15 +39,3 @@ export function doFriction(obj){
 		obj.setVelocity(obj.body.velocity.x * FRICTION, obj.body.velocity.y * FRICTION);
 	}
 }
-
-export function ppWallCollision(pp, wall){
-	console.log(pp);
-	console.log(wall);
-	if(wall.tileset === pp.scene.wallTile){
-		pp.destroy();
-	}else if(wall.tileset === pp.scene.iWallTile){
-		pp.destroy();
-	}else{
-		throw new error("Something unexpected in the wall layer");
-	}
-}

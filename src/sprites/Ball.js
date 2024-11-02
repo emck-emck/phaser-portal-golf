@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import PortalP from './PortalP.js';
 import {isEmpty} from '../utils/portalUtils.js';
 import {doFriction} from '../utils/utils.js';
-import {PP_SPEED, BALL_FORCE_MULTIPLIER, BALL_LOW_SPEED, BALL_STOP_SPEED, MAX_BALL_SPEED} from '../utils/constants.js';
+import {PP_SPEED, BALL_FORCE_MULTIPLIER, BALL_LOW_SPEED, BALL_STOP_SPEED, MAX_BALL_SPEED, TIMEOUT} from '../utils/constants.js';
 
 export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
@@ -29,6 +29,8 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		this.lastSpot = this.getCenter();
 		this.mouseDownCoords = {};
 		this.lastPortal = Date.now();
+		this.lastVel = new Phaser.Math.Vector2();
+		this.collision = false;
 
 		//Debug variable
 		this.timer = Date.now();
@@ -43,15 +45,26 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
 		//Friction stuff
         this.doBallFriction();
-	
+
 		//Timer debug
 		if(Date.now() >= this.timer + 1000){
 			this.timer = Date.now();
 			//Debug code goes here
+			// console.log(this.body.velocity);
 			// console.log(this.x);
 			// console.log(this.y);
 		}
     }
+
+	// Phaser function for handling things after collisions
+	postUpdate() {
+		if(this.collision){
+			this.body.velocity.x = this.lastVel.x;
+			this.body.velocity.y = this.lastVel.y;
+			this.collision = false;
+			this.lastVel = new Phaser.Math.Vector2();
+		}
+	}
 
 	//Handles the ball velocity when a shot is made
 	doBallShoot(pointer){
@@ -92,8 +105,7 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	portalCollision(ball, portal){
-		if(Date.now() >= ball.lastPortal + 50){
-			console.log("Last hit available");
+		if(Date.now() >= ball.lastPortal + TIMEOUT){
 			ball.lastPortal = Date.now();
 			return portal.objectPortalCollision(ball, portal);
 		}
@@ -102,6 +114,13 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
 	wallCollision(ball, wall){
 		
+	}
+
+	preCubeCollision(ball, cube){
+		ball.lastVel.x = ball.body.velocity.x;
+		ball.lastVel.y = ball.body.velocity.y;
+		ball.collision = true;
+		return true;
 	}
 
 	//Handles ball friction

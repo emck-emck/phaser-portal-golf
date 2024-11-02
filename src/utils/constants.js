@@ -25,6 +25,8 @@ export const OFFSET_PORTAL_PLACE = 5;
 export const PP_SPEED = 2000;
 export const SCREEN_HEIGHT = 640;
 export const SCREEN_WIDTH = 960;
+export const TIMEOUT = 50;
+export const TIMEOUT_LONG = 2000;
 
 //String constants
 export const ASSET_FILEPATH_GAME = '/assets/images/game/';

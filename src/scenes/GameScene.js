@@ -16,7 +16,6 @@ import PressurePlate from '../sprites/PressurePlate.js';
 //Util import
 import {ASSET_FILEPATH_GAME, ASSET_FILEPATH_GAME_MAP, BALL_FORCE_MULTIPLIER, MAX_BALL_SPEED, MENU_BAR_HEIGHT, MENU_FONT_SIZE, MWALL_SPEED} from '../utils/constants.js'
 import {MAP_INFO} from '../utils/constants.js';
-import {ppWallCollision} from '../utils/utils.js';
 
 
 
@@ -92,6 +91,7 @@ class GameScene extends Phaser.Scene {
 		this.sandTile = -1;
 		this.wallTile = -1;
 		this.iWallTile = -1;
+		this.fakeWall = -1;
 
 		//Check tile layers, load if we have them
 		//ground
@@ -101,8 +101,9 @@ class GameScene extends Phaser.Scene {
 			this.groundTile = this.map.addTilesetImage('Ground', 'ground');
 			this.waterTile = this.map.addTilesetImage('Water', 'water');
 			this.sandTile = this.map.addTilesetImage('Sand', 'sand');
+			this.fakeWall = this.map.addTilesetImage('Wall', 'wall');
 			//Create layer
-			this.groundLayer = this.map.createLayer('Ground_Layer', [this.groundTile, this.waterTile, this.sandTile], 0, 0);
+			this.groundLayer = this.map.createLayer('Ground_Layer', [this.groundTile, this.waterTile, this.sandTile, this.fakeWall], 0, 0);
 			this.groundLayer.setCollisionByExclusion([-1]);
 			//Tile object init
 			this.groundLayer.forEachTile((tile) => {
@@ -122,7 +123,7 @@ class GameScene extends Phaser.Scene {
 			this.iWallTile = this.map.addTilesetImage('Inactive_Wall', 'inactivewall');
 			//Create layer
 			this.wallLayer = this.map.createLayer('Wall_Layer', [this.wallTile, this.iWallTile], 0, 0);
-			this.wallLayer.setCollisionByExclusion([-1]);
+			this.wallLayer.setCollisionByProperty({collides: true});
 			//Tile object init
 			this.wallLayer.forEachTile((tile) => {
 				if(tile.tileset === this.wallTile){
@@ -183,6 +184,9 @@ class GameScene extends Phaser.Scene {
 						// Cube init
 						const cube = new Cube(this, object.x, object.y);
 						this.cubeGroup.add(cube);
+						cube.setImmovable(false);
+						cube.pushable = false;
+						cube.setMass(0.5);
 						cube.setDepth(1);
 						break;
 					case 'mwall':
@@ -271,7 +275,7 @@ class GameScene extends Phaser.Scene {
 		this.cubeGroup.children.iterate((c) => {
 			if (c) {
 				this.physics.add.collider(c, this.wallLayer, c.wallCollision);
-				this.physics.add.collider(c, this.ball, null, c.ballCollision);
+				this.physics.add.collider(c, this.ball, c.ballCollision, c.preBallCollision, this);
 				this.physics.add.collider(c, this.ppGroup, null, c.PPCollision);
 				this.physics.add.collider(c, this.portalGroup, null, c.portalCollision);
 				this.physics.add.collider(c, this.movingWallGroup, null, c.movingWallCollision);
@@ -311,6 +315,9 @@ class GameScene extends Phaser.Scene {
 	
 		//Player input init
 		var listener = new Listener(this);
+
+		// Post update listener
+		this.events.on('postupdate', this.postUpdate.bind(this));
 	}
 	
 	update() {
@@ -354,6 +361,10 @@ class GameScene extends Phaser.Scene {
 		}else{
 			this.indicator.setVisible(true);
 		}
+	}
+
+	postUpdate(time, delta){
+		this.ball.postUpdate();
 	}
 
 	ppPortalCollision(pp, portal){

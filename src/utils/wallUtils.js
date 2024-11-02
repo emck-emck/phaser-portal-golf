@@ -1,3 +1,5 @@
+import Cube from '../sprites/Cube.js';
+
 //Removes collision from walls with portals attached to them
 export function setPortalWallColliders(wallLayer, portals){
 	wallLayer.forEachTile(tile => {
@@ -16,14 +18,20 @@ export function setPortalWallColliders(wallLayer, portals){
 	});
 }
 
-//Determines and returns what side of the wall the portal projectile hit
+//Determines and returns what side of the wall the object hit
 export function getCollisionSide(x, y, wall) {
 
 	var wx = wall.pixelX + wall.width / 2;
 	var wy = wall.pixelY + wall.height / 2;
+
+	//Allows cubes to be considered walls
+	if(wall instanceof Cube){
+		wx = wall.body.center.x;
+		wy = wall.body.center.y;
+	}
 	
-	var dx = x - wx;
-	var dy = y - wy;
+	const dx = x - wx;
+	const dy = y - wy;
 
 	if (Math.abs(dx) > Math.abs(dy)) {
 		if (dx > 0) {
