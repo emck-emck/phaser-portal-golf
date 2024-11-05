@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import {TIMEOUT, TIMEOUT_LONG} from '../utils/constants.js';
 
 export default class MovingWall extends Phaser.Physics.Arcade.Sprite {
 
@@ -46,7 +47,7 @@ export default class MovingWall extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	wallCollision(movingWall, wall){
-		if(Date.now() >= movingWall.lastHit + 50){
+		if(Date.now() >= movingWall.lastHit + TIMEOUT){
 			movingWall.setVelocityX(-movingWall.body.velocity.x);
 			movingWall.setVelocityY(-movingWall.body.velocity.y);
 			movingWall.lastHit = Date.now();
@@ -60,7 +61,7 @@ export default class MovingWall extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	portalCollision(mWall, portal){
-		if(Date.now() >= mWall.lastPortal + 50){
+		if(Date.now() >= mWall.lastPortal + TIMEOUT_LONG){
 			mWall.lastPortal = Date.now();
 			return portal.mWallCollision(mWall, portal);
 		}else{

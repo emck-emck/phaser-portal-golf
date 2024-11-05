@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import {HORIZONTAL, VERTICAL} from '../utils/constants.js';
-import {getObjectRotation, isEmpty, teleportObject, setObjectVelocityAfterPortal} from '../utils/portalUtils.js';
+import {getObjectRotation, isEmpty, teleportObject, teleportMWall, setObjectVelocityAfterPortal} from '../utils/portalUtils.js';
 import {setPortalWallColliders} from '../utils/wallUtils.js';
 
 export default class Portal extends Phaser.Physics.Arcade.Sprite {
@@ -67,7 +67,7 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 		if(!isEmpty(otherPortal)){
 			otherPortal = Object.values(otherPortal)[0]; //Unwrap the portal object from the Javascript object
 			const rotation = getObjectRotation(portal, otherPortal); //Calculate the orientation of the object
-			teleportObject(m, otherPortal); //Move object to the out portal
+			teleportMWall(m, otherPortal); //Move object to the out portal
 			const vel = setObjectVelocityAfterPortal(m, rotation); //Set proper velocity for object 
 			//Fix for sin/cos math that messes with wall behaviour
 			if(vel.x > -1 && vel.x < 1){
@@ -78,7 +78,6 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 			}
 			return false;
 		}else{
-			console.log("Only one portal");
 			return m.wallCollision(m, portal);
 		}
 	}
