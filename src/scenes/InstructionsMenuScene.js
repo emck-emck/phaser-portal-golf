@@ -1,4 +1,5 @@
 import {ASSET_FILEPATH_INSTRUCTIONS, ASSET_FILEPATH_TXT} from '../utils/constants.js';
+import MenuListener from '../handlers/MenuListener.js';
 
 class InstructionsMenuScene extends Phaser.Scene {
     constructor(){
@@ -47,6 +48,8 @@ class InstructionsMenuScene extends Phaser.Scene {
 				this.scene.resume('MenuScene');
 				this.scene.stop('InstructionsMenu');
 			});
+			
+			const listener = new MenuListener(this);
 		};
     }
 }

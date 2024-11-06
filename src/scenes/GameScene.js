@@ -14,7 +14,7 @@ import PortalP from '../sprites/PortalP.js';
 import PressurePlate from '../sprites/PressurePlate.js';
 
 //Util import
-import {ASSET_FILEPATH_GAME, ASSET_FILEPATH_GAME_MAP, BALL_FORCE_MULTIPLIER, MAX_BALL_SPEED, MENU_BAR_HEIGHT, MENU_FONT_SIZE, MWALL_SPEED} from '../utils/constants.js'
+import {ASSET_FILEPATH_GAME, ASSET_FILEPATH_GAME_MAP, BALL_FORCE_MULTIPLIER, MAX_BALL_SPEED, MENU_BAR_HEIGHT, MENU_FONT_SIZE, MWALL_SPEED, PORTAL_BLUE, PORTAL_ORANGE} from '../utils/constants.js'
 import {MAP_INFO} from '../utils/constants.js';
 
 
@@ -79,6 +79,9 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+		// Canvas listener init
+		this.canvas = this.game.canvas;
+
         //Tiled Init
 		//Make map
 		this.map = this.make.tilemap({key: this.holeName});
@@ -314,7 +317,7 @@ class GameScene extends Phaser.Scene {
 		});
 	
 		//Player input init
-		var listener = new Listener(this);
+		const listener = new Listener(this);
 
 		// Post update listener
 		this.events.on('postupdate', this.postUpdate.bind(this));
@@ -374,6 +377,11 @@ class GameScene extends Phaser.Scene {
 
 	portalPortalCollision(p1, p2){
 		Portal.destroyByProperty(this, p2.key);
+	}
+
+	resetPortals(){
+		Portal.destroyByProperty(this, PORTAL_ORANGE);
+		Portal.destroyByProperty(this, PORTAL_BLUE);
 	}
 
 	createMenuBar() {

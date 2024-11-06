@@ -1,5 +1,6 @@
 import {ASSET_FILEPATH_WIN} from '../utils/constants.js';
 import {MAP_INFO} from '../utils/constants.js';
+import MenuListener from '../handlers/MenuListener.js';
 
 class WinScene extends Phaser.Scene {
     constructor(){
@@ -80,6 +81,8 @@ class WinScene extends Phaser.Scene {
 				const quitButton = this.add.image(quitx, quity, 'quitButton').setInteractive();
 				quitButton.on('pointerdown', this.quit, this);
 			}
+
+			const listener = new MenuListener(this);
 		};
     }
 

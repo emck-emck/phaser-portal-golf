@@ -1,4 +1,5 @@
 import {ASSET_FILEPATH_PAUSE} from '../utils/constants.js';
+import PauseMenuListener from '../handlers/PauseMenuListener.js';
 
 class PauseMenuScene extends Phaser.Scene {
     constructor() {
@@ -40,25 +41,27 @@ class PauseMenuScene extends Phaser.Scene {
 			const resumex = bgx + bwidth * 0.25;
 			const resumey = bgy + bheight * 0.8;
 			const resumeButton = this.add.image(resumex, resumey, 'resumeButton').setInteractive();
-			resumeButton.on('pointerdown', this.quitGame, this);
+			resumeButton.on('pointerdown', this.resumeGame, this);
 			
 			//Quit button
 			const quitx = bgx + bwidth * 0.75;
 			const quity = bgy + bheight * 0.8;
 			const quitButton = this.add.image(quitx, quity, 'quitButton').setInteractive();
-			quitButton.on('pointerdown', this.resumeGame, this);
+			quitButton.on('pointerdown', this.quitGame, this);
+
+			const listener = new PauseMenuListener(this);
 		};
     }
 
 	resumeGame(){
 		this.scene.stop('PauseMenu');
-        this.scene.stop('GameScene');
-		this.scene.start('MenuScene');
+        this.scene.resume('GameScene');
 	}
 
 	quitGame(){
 		this.scene.stop('PauseMenu');
-        this.scene.resume('GameScene');
+        this.scene.stop('GameScene');
+		this.scene.start('MenuScene');
 	}
 }
 

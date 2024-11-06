@@ -1,4 +1,5 @@
 import {ASSET_FILEPATH_MENU} from '../utils/constants.js';
+import MenuListener from '../handlers/MenuListener.js';
 
 class MenuScene extends Phaser.Scene {
     constructor() {
@@ -15,6 +16,8 @@ class MenuScene extends Phaser.Scene {
         this.add.image(this.scale.width/2,this.scale.height/2,'menuScreen');
         const startButton = this.add.image(this.scale.width/2, 437, 'startButton').setInteractive();
 		const instructionsButton = this.add.image(this.scale.width/2, 537, 'instructionsButton').setInteractive();
+
+		const listener = new MenuListener(this);
 
         startButton.on('pointerdown', () => {
             this.scene.start('GameScene', {holeId: 0, totalStrokes: 0});
