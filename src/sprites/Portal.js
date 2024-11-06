@@ -41,7 +41,9 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 		if (instance) {
 			instance.destroy();
 			delete Portal.instances[key];
-			setPortalWallColliders(s.wallLayer, Portal.instances);
+			if(s.wallLayer.tileset.length > 0){
+				setPortalWallColliders(s.wallLayer, Portal.instances);
+			}
 		}
 	}
 

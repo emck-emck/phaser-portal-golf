@@ -3,7 +3,7 @@ export const MAP_INFO = [
 							// {name: 'sandbox', par: 99},
 							{name: 'hole_1', par: 3},
 							{name: 'hole_2', par: 4},
-							{name: 'hole_3', par: 5},
+							// {name: 'hole_3', par: 5},
 							{name: 'hole_4', par: 3}
 ];
 

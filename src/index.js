@@ -9,9 +9,14 @@ import PauseMenuScene from './scenes/PauseMenuScene.js';
 
 //Magic Phaser3 Configuration Stuff
 const config = {
+	parent: 'game-container',
 	type: Phaser.AUTO,
 	width: SCREEN_WIDTH,
 	height: SCREEN_HEIGHT,
+	scale: {
+        mode: Phaser.Scale.FIT,   // Ensures the game scales to fit the screen
+        autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game
+    },
 	physics: {
         default: 'arcade',
         arcade: {
