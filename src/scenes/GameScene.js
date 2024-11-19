@@ -22,6 +22,15 @@ import {MAP_INFO} from '../utils/constants.js';
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
+    }
+
+	init(data){
+		//Level-to-Level data
+		this.holeId = data.holeId;
+		this.totalStrokes = data.totalStrokes;
+		this.holeName = MAP_INFO[data.holeId].name;
+		this.par = MAP_INFO[data.holeId].par;
+
 		//Objects
 		this.ball = null;
 		this.walls = null;
@@ -37,14 +46,8 @@ class GameScene extends Phaser.Scene {
 		this.strokes = 0;
 
 		//Helper
+		this.win = false;
 		this.powerBarActive = false;
-    }
-
-	init(data){
-		this.holeId = data.holeId;
-		this.totalStrokes = data.totalStrokes;
-		this.holeName = MAP_INFO[data.holeId].name;
-		this.par = MAP_INFO[data.holeId].par;
 	}
 
     preload() {
@@ -53,6 +56,9 @@ class GameScene extends Phaser.Scene {
 	
 		//Tiles
 		this.load.image('ground', ASSET_FILEPATH_GAME +  'bg_tile.png');
+		this.load.image('groundlh', ASSET_FILEPATH_GAME +  'bg_line_h.png');
+		this.load.image('groundlv', ASSET_FILEPATH_GAME +  'bg_line_v.png');
+		this.load.image('groundle', ASSET_FILEPATH_GAME +  'bg_line_e.png');
 		this.load.image('water', ASSET_FILEPATH_GAME +  'water.png');
 		this.load.image('sand', ASSET_FILEPATH_GAME +  'sand.png');
 		this.load.image('wall', ASSET_FILEPATH_GAME +  'wall.png');
@@ -90,6 +96,9 @@ class GameScene extends Phaser.Scene {
 		this.groundLayer = null;
 		//Tilesets
 		this.groundTile = -1;
+		this.groundLineHTile = -1;
+		this.groundLineVTile = -1;
+		this.groundLineETile = -1;
 		this.waterTile = -1;
 		this.sandTile = -1;
 		this.wallTile = -1;
@@ -100,13 +109,39 @@ class GameScene extends Phaser.Scene {
 		//ground
 		const groundLayer = this.map.getLayer('Ground_Layer');
 		if(groundLayer){
-			//Connect images to tiles
-			this.groundTile = this.map.addTilesetImage('Ground', 'ground');
-			this.waterTile = this.map.addTilesetImage('Water', 'water');
-			this.sandTile = this.map.addTilesetImage('Sand', 'sand');
-			this.fakeWall = this.map.addTilesetImage('Wall', 'wall');
+			// Filter tiles used in map and connect images to used tiles
+			const availableTilesets = [];
+			if (this.map.tilesets.some(tileset => tileset.name === 'Ground')) {
+				this.groundTile = this.map.addTilesetImage('Ground', 'ground');
+				availableTilesets.push(this.groundTile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Ground_Line_H')) {
+				this.groundLineHTile = this.map.addTilesetImage('Ground_Line_H', 'groundlh');
+				availableTilesets.push(this.groundLineHTile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Ground_Line_V')) {
+				this.groundLineVTile = this.map.addTilesetImage('Ground_Line_V', 'groundlv');
+				availableTilesets.push(this.groundLineVTile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Ground_Line_Elbow')) {
+				this.groundLineETile = this.map.addTilesetImage('Ground_Line_Elbow', 'groundle');
+				availableTilesets.push(this.groundLineETile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Water')) {
+				this.waterTile = this.map.addTilesetImage('Water', 'water');
+				availableTilesets.push(this.waterTile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Sand')) {
+				this.sandTile = this.map.addTilesetImage('Sand', 'sand');
+				availableTilesets.push(this.sandTile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Wall')) {
+				this.fakeWall = this.map.addTilesetImage('Wall', 'wall');
+				availableTilesets.push(this.fakeWall);
+			}
+
 			//Create layer
-			this.groundLayer = this.map.createLayer('Ground_Layer', [this.groundTile, this.waterTile, this.sandTile, this.fakeWall], 0, 0);
+			this.groundLayer = this.map.createLayer('Ground_Layer', availableTilesets, 0, 0);
 			this.groundLayer.setCollisionByExclusion([-1]);
 			//Tile object init
 			this.groundLayer.forEachTile((tile) => {
@@ -122,10 +157,17 @@ class GameScene extends Phaser.Scene {
 		const wallLayer = this.map.getLayer('Wall_Layer');
 		if(wallLayer){
 			//Connect images to tiles
-			this.wallTile = this.map.addTilesetImage('Wall', 'wall');
-			this.iWallTile = this.map.addTilesetImage('Inactive_Wall', 'inactivewall');
+			const availableTilesets = [];
+			if (this.map.tilesets.some(tileset => tileset.name === 'Wall')) {
+				this.wallTile = this.map.addTilesetImage('Wall', 'wall');
+				availableTilesets.push(this.wallTile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Inactive_Wall')) {
+				this.iWallTile = this.map.addTilesetImage('Inactive_Wall', 'inactivewall');
+				availableTilesets.push(this.iWallTile);
+			}
 			//Create layer
-			this.wallLayer = this.map.createLayer('Wall_Layer', [this.wallTile, this.iWallTile], 0, 0);
+			this.wallLayer = this.map.createLayer('Wall_Layer', availableTilesets, 0, 0);
 			this.wallLayer.setCollisionByProperty({collides: true});
 			//Tile object init
 			this.wallLayer.forEachTile((tile) => {
@@ -135,9 +177,6 @@ class GameScene extends Phaser.Scene {
 					
 				}
 			});
-			 // Enable debug rendering for the tile layer
-			//this.debugGraphics = this.add.graphics().setAlpha(0.75);
-			//this.debugWall();
 		}
 
 		//Find Object Positions
@@ -175,6 +214,7 @@ class GameScene extends Phaser.Scene {
 		}else{
 			throw new error('Ball not initialized');
 		}
+
 
 		//Every other static object
 		if(objectLayer){
@@ -325,6 +365,10 @@ class GameScene extends Phaser.Scene {
 	
 	update() {
 
+		if(this.win){
+			this.winGame();
+		}
+
 		//Ball motion
 		this.ball.update();
 		//Cube motion
@@ -367,7 +411,9 @@ class GameScene extends Phaser.Scene {
 	}
 
 	postUpdate(time, delta){
-		this.ball.postUpdate();
+		if(this.ball){
+			this.ball.postUpdate();
+		}
 	}
 
 	ppPortalCollision(pp, portal){
@@ -382,6 +428,17 @@ class GameScene extends Phaser.Scene {
 	resetPortals(){
 		Portal.destroyByProperty(this, PORTAL_ORANGE);
 		Portal.destroyByProperty(this, PORTAL_BLUE);
+	}
+
+	winGame(){
+		this.resetPortals();
+		this.scene.pause();
+		this.scene.launch('WinScene', {
+										holeId: this.holeId, 
+										totalStrokes: (this.strokes + this.totalStrokes), 
+										strokes: this.strokes, 
+										par: this.par
+		});
 	}
 
 	createMenuBar() {
@@ -430,16 +487,6 @@ class GameScene extends Phaser.Scene {
 		this.powerBar.setVisible(true);
         this.powerBar.setCrop(0, 0, this.powerBar.width * powerPercentage, this.powerBar.height);
     }
-
-	// Delete me when you're ready
-	debugWall(){
-		this.debugGraphics.clear();
-		this.walls.renderDebug(this.debugGraphics, {
-			tileColor: null, // Color of non-colliding tiles
-			collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-			faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of the colliding face edges
-		});
-	}
 }
 
 export default GameScene;

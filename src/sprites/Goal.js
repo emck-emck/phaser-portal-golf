@@ -36,13 +36,7 @@ export default class Goal extends Phaser.Physics.Arcade.Sprite {
 			ballCenterY <= goalY + goal.height/2
 		){
 			ball.setVisible(false);
-			this.scene.launch('WinScene', {
-											holeId: this.holeId, 
-											totalStrokes: (this.strokes + this.totalStrokes), 
-											strokes: this.strokes, 
-											par: this.par
-			});
-			this.scene.pause();
+			this.win = true;
 		}
 		return false;
 	}

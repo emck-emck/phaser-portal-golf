@@ -17,20 +17,22 @@ class MenuScene extends Phaser.Scene {
         const startButton = this.add.image(this.scale.width/2, 437, 'startButton').setInteractive();
 		const instructionsButton = this.add.image(this.scale.width/2, 537, 'instructionsButton').setInteractive();
 
+        startButton.on('pointerdown', this.startGame, this);
+		instructionsButton.on('pointerdown', this.instructions, this);
+
 		const listener = new MenuListener(this);
-
-        startButton.on('pointerdown', () => {
-            this.scene.start('GameScene', {holeId: 0, totalStrokes: 0});
-			this.scene.stop('MenuScene');
-        });
-
-		instructionsButton.on('pointerdown', () => {
-			this.scene.launch('InstructionsMenu');
-            this.scene.pause('MenuScene');
-        });
-
-		
     }
+
+	startGame(){
+		this.scene.start('GameScene', {holeId: 0, totalStrokes: 0});
+		this.scene.stop('MenuScene');
+	}
+
+	instructions(){
+		this.scene.launch('InstructionsMenu');
+        this.scene.pause('MenuScene');
+	}
+
 }
 
 export default MenuScene;
