@@ -15,9 +15,6 @@ export default class Listener {
 		this.isFDown = false;
 
 		//Listener setup
-		//Scene shutdown
-		this.scene.events.on('shutdown', this.cleanupGameScene.bind(this));
-
 
 		//Mouse
 		this.scene.input.on('pointerdown', this.onPointerDown, this);
@@ -37,11 +34,6 @@ export default class Listener {
 		this.scene.input.keyboard.on('keyup-W', this.releaseW, this);
 		this.scene.input.keyboard.on('keyup-F', this.releaseF, this);
     }
-
-	cleanupGameScene(){
-		console.log("Cleaning up scene");
-		this.scene.resetPortals();
-	}
 
 	//When the mouse is clicked down
 	onPointerDown(pointer){

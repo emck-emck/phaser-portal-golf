@@ -88,7 +88,6 @@ class WinScene extends Phaser.Scene {
 
 	nextLevel(){
 		this.scene.stop();
-		this.scene.stop('GameScene');
 		this.scene.start('GameScene', {holeId: (this.holeId + 1), totalStrokes: this.totalStrokes});
 	}
 
