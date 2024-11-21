@@ -35,6 +35,26 @@ export default class Listener {
 		this.scene.input.keyboard.on('keyup-F', this.releaseF, this);
     }
 
+	shutdown(){
+		//Mouse
+		this.scene.input.off('pointerdown', this.onPointerDown, this);
+		this.scene.input.off('pointerup', this.onPointerUp, this);
+		this.scene.canvas.removeEventListener('mouseleave', this.onPointerOut.bind(this));
+		
+		//Keys
+		//Keydown
+		this.scene.input.keyboard.off('keydown-Q', this.onPortalShoot, this);
+		this.scene.input.keyboard.off('keydown-E', this.onPortalShoot, this);
+		this.scene.input.keyboard.off('keydown-W', this.onShotCancel, this);
+		this.scene.input.keyboard.off('keydown-F', this.fullscreen, this);
+		this.scene.input.keyboard.off('keydown-P', this.pauseGame, this);
+		//Keyup
+		this.scene.input.keyboard.off('keyup-Q', this.releaseQ, this);
+		this.scene.input.keyboard.off('keyup-E', this.releaseE, this);
+		this.scene.input.keyboard.off('keyup-W', this.releaseW, this);
+		this.scene.input.keyboard.off('keyup-F', this.releaseF, this);
+	}
+
 	//When the mouse is clicked down
 	onPointerDown(pointer){
 		if(!this.ball.isBallMoving()){
