@@ -5,7 +5,8 @@ export const MAP_INFO = [
 							{name: 'hole_2', par: 4},
 							{name: 'hole_3', par: 5},
 							{name: 'hole_4', par: 3},
-							{name: 'hole_5', par: 3}
+							{name: 'hole_5', par: 3},
+							{name: 'hole_6', par: 5}
 ];
 
 //Number constants

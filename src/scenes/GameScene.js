@@ -357,14 +357,16 @@ class GameScene extends Phaser.Scene {
 		});
 	
 		//Player input init
-		const listener = new Listener(this);
+		this.listener = new Listener(this);
 
 		// Post update listener
-		this.events.on('postupdate', this.postUpdate.bind(this));
+		this.events.on('postupdate', this.postUpdate, this);
+		// Shutdown listener
+		this.events.on('shutdown', this.shutdown, this);
 	}
 	
 	update() {
-
+		// Win check
 		if(this.win){
 			this.winGame();
 		}
@@ -416,6 +418,17 @@ class GameScene extends Phaser.Scene {
 		}
 	}
 
+	shutdown(){
+		// Shut down all listeners
+		this.listener.shutdown();
+		this.events.off('postupdate', this.postUpdate, this);
+		this.events.off('shutdown', this.shutdown, this);
+
+		// Destroy all objects
+		// More code needed
+		this.resetPortals();
+	}
+
 	ppPortalCollision(pp, portal){
 		pp.destroy();
 		return false;
@@ -431,7 +444,6 @@ class GameScene extends Phaser.Scene {
 	}
 
 	winGame(){
-		this.resetPortals();
 		this.scene.pause();
 		this.scene.launch('WinScene', {
 										holeId: this.holeId, 
