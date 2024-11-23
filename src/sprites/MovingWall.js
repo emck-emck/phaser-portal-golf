@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import {TIMEOUT, TIMEOUT_LONG} from '../utils/constants.js';
+import {DESTROY_THRESHOLD, TIMEOUT, TIMEOUT_LONG} from '../utils/constants.js';
 
 export default class MovingWall extends Phaser.Physics.Arcade.Sprite {
 
@@ -43,6 +43,18 @@ export default class MovingWall extends Phaser.Physics.Arcade.Sprite {
 			this.setVelocity(this.speed, 0);
 		}else{
 			this.setVelocity(0, this.speed);
+		}
+	}
+
+	dWallCollision(mWall, dWall){
+		const dx = mWall.x - dWall.x;
+        const dy = mWall.y - dWall.y;
+        const distance = Math.sqrt((dx * dx) + (dy * dy));
+
+		if(distance < DESTROY_THRESHOLD){
+			mWall.destroy();
+		}else{
+			mWall.wallCollision(mWall, dWall);
 		}
 	}
 

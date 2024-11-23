@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import PortalP from './PortalP.js';
 import {isEmpty} from '../utils/portalUtils.js';
 import {doFriction} from '../utils/utils.js';
-import {PP_SPEED, BALL_FORCE_MULTIPLIER, BALL_LOW_SPEED, BALL_STOP_SPEED, MAX_BALL_SPEED, TIMEOUT} from '../utils/constants.js';
+import {DESTROY_THRESHOLD, PP_SPEED, BALL_FORCE_MULTIPLIER, BALL_LOW_SPEED, BALL_STOP_SPEED, MAX_BALL_SPEED, TIMEOUT} from '../utils/constants.js';
 
 export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
@@ -112,8 +112,29 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		return true;
 	}
 
-	wallCollision(ball, wall){
-		
+	dWallCollision(dWall, ball){
+		const dx = ball.x - dWall.x;
+        const dy = ball.y - dWall.y;
+        const distance = Math.sqrt((dx * dx) + (dy * dy));
+
+		console.log(distance);
+
+		if(distance < DESTROY_THRESHOLD){
+			// Disable and shortly after re-enable the ball's body
+			// Keeps body inert for position update
+			ball.body.enable = false;
+
+			//Do necessary updates to ball
+			ball.setVelocity(0, 0);
+			ball.setPosition(ball.lastSpot.x, ball.lastSpot.y);				
+			
+			//Re-enable ball body
+			setTimeout(() => {
+				ball.body.enable = true;
+			}, 10);
+		}else{
+			return true;
+		}
 	}
 
 	preCubeCollision(ball, cube){

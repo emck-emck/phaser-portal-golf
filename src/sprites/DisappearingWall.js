@@ -15,4 +15,9 @@ export default class DisappearingWall extends Phaser.Physics.Arcade.Sprite {
     update() {
 		
     }
+
+	ppCollision(dw, pp){
+		pp.destroy();
+		return false;
+	}
 }

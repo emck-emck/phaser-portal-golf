@@ -336,7 +336,7 @@ class GameScene extends Phaser.Scene {
 				this.physics.add.collider(m, this.portalGroup, null, m.portalCollision);
 				this.physics.add.collider(m, this.cubeGroup, null, m.wallCollision);
 				this.physics.add.collider(m, this.movingWallGroup, m.wallCollision);
-				this.physics.add.collider(m, this.disappearingWallGroup, null, m.wallCollision);
+				this.physics.add.collider(m, this.disappearingWallGroup, null, m.dWallCollision);
 			}
 		});
 
@@ -352,7 +352,8 @@ class GameScene extends Phaser.Scene {
 		//Disappearing Wall Colliders
 		this.disappearingWallGroup.children.iterate((dw) => {
 			if (dw) {
-				this.physics.add.collider(dw, this.ball);
+				this.physics.add.collider(dw, this.ball, this.ball.dWallCollision);
+				this.physics.add.collider(dw, this.ppGroup, null, dw.ppCollision);
 			}
 		});
 	
