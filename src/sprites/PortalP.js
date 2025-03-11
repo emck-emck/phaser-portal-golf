@@ -43,7 +43,7 @@ export default class PortalP extends Phaser.Physics.Arcade.Sprite {
 					}
 				}
 				pp.destroy();
-			}else if(wall.tileset === pp.scene.iWallTile){
+			}else{
 				pp.destroy();
 			}
 		}

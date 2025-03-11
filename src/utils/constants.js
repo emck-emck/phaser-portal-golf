@@ -6,7 +6,8 @@ export const MAP_INFO = [
 							{name: 'hole_3', par: 5},
 							{name: 'hole_4', par: 3},
 							{name: 'hole_5', par: 3},
-							{name: 'hole_6', par: 5}
+							{name: 'hole_6', par: 5},
+							{name: 'hole_7', par: 5}
 ];
 
 //Number constants
@@ -14,6 +15,7 @@ export const BALL_FORCE_MULTIPLIER = 3;
 export const BALL_LOW_SPEED = 50;
 export const BALL_STOP_SPEED = 1;
 export const COLLISION_DEBOUNCE_TIME = 50;
+export const DESTROY_THRESHOLD = 30;
 export const FRICTION = 0.98;
 export const FRICTION_SAND = 0.93;
 export const GOAL_BALL_THRESHOLD = 12;

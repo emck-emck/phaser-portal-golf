@@ -1,0 +1,11 @@
+Use the left mouse button to putt the ball
+
+Click and hold on the screen and drag in the direction opposite where you want the ball to go---
+Use Q and E to shoot portals
+
+Press W to cancel a putt
+
+Press F to toggle Full Screen mode
+
+Press P to pause the game---
+Get the ball to the goal!

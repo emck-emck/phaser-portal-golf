@@ -77,15 +77,18 @@ export function teleportObject(object, exitPortal){
 }
 
 export function teleportMWall(m, exitPortal){
+	const s = m.scene;
+
 	m.x = exitPortal.x;
 	m.y = exitPortal.y;
+	
 
 	// Code to temporarily disable walls overlapping with new mWall position
 	const mw = m.width;
 	const mh = m.height;
 	const mx = m.x - mw/2;
 	const my = m.y - mh/2;
-	const tiles = m.scene.wallLayer.getTilesWithinWorldXY(mx, my, mw, mh);
+	const tiles = s.wallLayer.getTilesWithinWorldXY(mx, my, mw, mh);
 
 	tiles.forEach(tile => {
 		
@@ -93,9 +96,9 @@ export function teleportMWall(m, exitPortal){
 			const tileX = tile.x;
 			const tileY = tile.y;
 			const idx = tile.index;
-			m.scene.wallLayer.removeTileAt(tileX, tileY);
-			m.scene.time.delayedCall(TIMEOUT_LONG, () => {
-				const t = m.scene.wallLayer.putTileAt(idx, tileX, tileY);
+			s.wallLayer.removeTileAt(tileX, tileY);
+			s.time.delayedCall(TIMEOUT_LONG, () => {
+				const t = s.wallLayer.putTileAt(idx, tileX, tileY);
 				t.setCollision(true);
 			});
 		}
