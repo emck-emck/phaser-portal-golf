@@ -59,6 +59,8 @@ class GameScene extends Phaser.Scene {
 		this.load.image('groundlh', ASSET_FILEPATH_GAME +  'bg_line_h.png');
 		this.load.image('groundlv', ASSET_FILEPATH_GAME +  'bg_line_v.png');
 		this.load.image('groundle', ASSET_FILEPATH_GAME +  'bg_line_e.png');
+		this.load.image('groundlt', ASSET_FILEPATH_GAME +  'bg_line_t.png');
+		this.load.image('groundlc', ASSET_FILEPATH_GAME +  'bg_line_c.png');
 		this.load.image('water', ASSET_FILEPATH_GAME +  'water.png');
 		this.load.image('sand', ASSET_FILEPATH_GAME +  'sand.png');
 		this.load.image('wall', ASSET_FILEPATH_GAME +  'wall.png');
@@ -99,6 +101,8 @@ class GameScene extends Phaser.Scene {
 		this.groundLineHTile = -1;
 		this.groundLineVTile = -1;
 		this.groundLineETile = -1;
+		this.groundLineTTile = -1;
+		this.groundLineCTile = -1;
 		this.waterTile = -1;
 		this.sandTile = -1;
 		this.wallTile = -1;
@@ -127,6 +131,15 @@ class GameScene extends Phaser.Scene {
 				this.groundLineETile = this.map.addTilesetImage('Ground_Line_Elbow', 'groundle');
 				availableTilesets.push(this.groundLineETile);
 			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Ground_Line_T')) {
+				this.groundLineTTile = this.map.addTilesetImage('Ground_Line_T', 'groundlt');
+				availableTilesets.push(this.groundLineTTile);
+			}
+			if (this.map.tilesets.some(tileset => tileset.name === 'Ground_Line_Cross')) {
+				this.groundLineCTile = this.map.addTilesetImage('Ground_Line_Cross', 'groundlc');
+				availableTilesets.push(this.groundLineCTile);
+			}
+
 			if (this.map.tilesets.some(tileset => tileset.name === 'Water')) {
 				this.waterTile = this.map.addTilesetImage('Water', 'water');
 				availableTilesets.push(this.waterTile);
