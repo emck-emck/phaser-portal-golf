@@ -52,6 +52,7 @@ export default class MovingWall extends Phaser.Physics.Arcade.Sprite {
         const distance = Math.sqrt((dx * dx) + (dy * dy));
 
 		if(distance < DESTROY_THRESHOLD){
+			mWall.scene.sound.play('squish');
 			mWall.destroy();
 		}else{
 			mWall.wallCollision(mWall, dWall);

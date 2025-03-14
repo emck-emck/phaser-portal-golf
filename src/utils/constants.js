@@ -32,11 +32,12 @@ export const PP_SPEED = 2000;
 export const SCREEN_HEIGHT = 640;
 export const SCREEN_WIDTH = 960;
 export const TIMEOUT = 50;
-export const TIMEOUT_LONG = 2000;
+export const TIMEOUT_LONG = 1000;
 
 //String constants
 export const ASSET_FILEPATH_GAME = '/assets/images/game/';
 export const ASSET_FILEPATH_GAME_MAP = '/assets/maps/';
+export const ASSET_FILEPATH_GAME_SOUND = '/assets/mp3/';
 export const ASSET_FILEPATH_INSTRUCTIONS = '/assets/images/instructions/';
 export const ASSET_FILEPATH_MENU = '/assets/images/startmenu/';
 export const ASSET_FILEPATH_PAUSE = '/assets/images/pause/';
