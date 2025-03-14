@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import {doFriction} from '../utils/utils.js';
 import {getCollisionSide} from '../utils/wallUtils.js'
+import {DESTROY_THRESHOLD} from '../utils/constants.js';
 
 export default class Cube extends Phaser.Physics.Arcade.Sprite {
 
@@ -46,5 +47,20 @@ export default class Cube extends Phaser.Physics.Arcade.Sprite {
 
 	portalCollision(cube, portal){
 		return portal.objectPortalCollision(cube, portal);
+	}
+
+	dWallOverlap(cube, dWall){
+		const dx = cube.x - dWall.x;
+        const dy = cube.y - dWall.y;
+        const distance = Math.sqrt((dx * dx) + (dy * dy));
+
+		if(distance < DESTROY_THRESHOLD){
+			//Sound effect
+			cube.scene.sound.play('squish');
+
+			cube.destroy();
+		}else{
+			return true;
+		}
 	}
 }

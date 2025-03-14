@@ -36,6 +36,7 @@ export default class Goal extends Phaser.Physics.Arcade.Sprite {
 			ballCenterY <= goalY + goal.height/2
 		){
 			ball.setVisible(false);
+			this.sound.play('hole');
 			this.win = true;
 		}
 		return false;

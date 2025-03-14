@@ -16,6 +16,7 @@ export function doFriction(obj){
 		if(tile.tileset === obj.scene.sandTile){ //If sand tile
 			obj.setVelocity(obj.body.velocity.x * FRICTION_SAND, obj.body.velocity.y * FRICTION_SAND);
 		}else if(tile.tileset === obj.scene.waterTile){ // If water tile
+			obj.scene.sound.play('splash'); //Sound effect
 			if(obj instanceof Ball){ // Ball reset to last spot
 				// Disable and shortly after re-enable the ball's body
 				// Keeps body inert for position update

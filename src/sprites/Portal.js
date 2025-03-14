@@ -34,6 +34,9 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 
 		//Set Wall Colliders
 		setPortalWallColliders(this.scene.wallLayer, Portal.instances);
+		
+		//Sound effect
+		this.scene.sound.play('pspawn');
     }
 
 	static destroyByProperty(s, key) {
@@ -78,6 +81,8 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 			if(vel.y > -1 && vel.y < 1){
 				vel.y = 0;
 			}
+			//Sound effect
+			m.scene.sound.play('penter');
 			return false;
 		}else{
 			return m.wallCollision(m, portal);
@@ -94,6 +99,7 @@ export default class Portal extends Phaser.Physics.Arcade.Sprite {
 			const rotation = getObjectRotation(portal, otherPortal); //Calculate the orientation of the object
 			teleportObject(object, otherPortal); //Move object to the out portal
 			setObjectVelocityAfterPortal(object, rotation); //Set proper velocity for object
+			object.scene.sound.play('penter'); //Sound effect
 			return false;
 		}
 		return true;

@@ -14,7 +14,7 @@ import PortalP from '../sprites/PortalP.js';
 import PressurePlate from '../sprites/PressurePlate.js';
 
 //Util import
-import {ASSET_FILEPATH_GAME, ASSET_FILEPATH_GAME_MAP, BALL_FORCE_MULTIPLIER, MAX_BALL_SPEED, MENU_BAR_HEIGHT, MENU_FONT_SIZE, MWALL_SPEED, PORTAL_BLUE, PORTAL_ORANGE} from '../utils/constants.js'
+import {ASSET_FILEPATH_GAME, ASSET_FILEPATH_GAME_MAP, ASSET_FILEPATH_GAME_SOUND, BALL_FORCE_MULTIPLIER, MAX_BALL_SPEED, MENU_BAR_HEIGHT, MENU_FONT_SIZE, MWALL_SPEED, PORTAL_BLUE, PORTAL_ORANGE} from '../utils/constants.js'
 import {MAP_INFO} from '../utils/constants.js';
 
 
@@ -85,6 +85,14 @@ class GameScene extends Phaser.Scene {
 		this.load.image('oportalh', ASSET_FILEPATH_GAME + 'orangeportalwallh.png');
 		this.load.image('bportalv', ASSET_FILEPATH_GAME + 'blueportalwallv.png');
 		this.load.image('oportalv', ASSET_FILEPATH_GAME + 'orangeportalwallv.png');
+
+		//Sounds
+		this.load.audio('putt', ASSET_FILEPATH_GAME_SOUND + 'putt.mp3');
+		this.load.audio('hole', ASSET_FILEPATH_GAME_SOUND + 'hole.mp3');
+		this.load.audio('splash', ASSET_FILEPATH_GAME_SOUND + 'splash.mp3');
+		this.load.audio('squish', ASSET_FILEPATH_GAME_SOUND + 'squish.mp3');
+		this.load.audio('pspawn', ASSET_FILEPATH_GAME_SOUND + 'portal_spawn.mp3');
+		this.load.audio('penter', ASSET_FILEPATH_GAME_SOUND + 'portal_enter.mp3');
     }
 
     create() {
@@ -341,6 +349,7 @@ class GameScene extends Phaser.Scene {
 				this.physics.add.collider(c, this.portalGroup, null, c.portalCollision);
 				this.physics.add.collider(c, this.movingWallGroup, null, c.movingWallCollision);
 				this.physics.add.collider(c, this.disappearingWallGroup, c.wallCollision);
+				this.physics.add.overlap(c, this.disappearingWallGroup, c.dWallOverlap);
 				this.physics.add.collider(c, this.cubeGroup);
 			}
 		});
@@ -370,7 +379,8 @@ class GameScene extends Phaser.Scene {
 		//Disappearing Wall Colliders
 		this.disappearingWallGroup.children.iterate((dw) => {
 			if (dw) {
-				this.physics.add.collider(dw, this.ball, this.ball.dWallCollision);
+				this.physics.add.collider(dw, this.ball);
+				this.physics.add.overlap(dw, this.ball, this.ball.dWallOverlap);
 				this.physics.add.collider(dw, this.ppGroup, null, dw.ppCollision);
 			}
 		});

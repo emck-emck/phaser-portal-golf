@@ -91,6 +91,9 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		this.setVelocity(-velocity.x, -velocity.y);
 		this.scene.strokes++;
 		this.mouseDownCoords = {};
+
+		//Sound effect
+		this.scene.sound.play('putt');
 	}
 
 	//Handles when a portal is shot
@@ -112,12 +115,10 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 		return true;
 	}
 
-	dWallCollision(dWall, ball){
+	dWallOverlap(dWall, ball){
 		const dx = ball.x - dWall.x;
         const dy = ball.y - dWall.y;
         const distance = Math.sqrt((dx * dx) + (dy * dy));
-
-		console.log(distance);
 
 		if(distance < DESTROY_THRESHOLD){
 			// Disable and shortly after re-enable the ball's body
@@ -126,7 +127,10 @@ export default class Ball extends Phaser.Physics.Arcade.Sprite {
 
 			//Do necessary updates to ball
 			ball.setVelocity(0, 0);
-			ball.setPosition(ball.lastSpot.x, ball.lastSpot.y);				
+			ball.setPosition(ball.lastSpot.x, ball.lastSpot.y);	
+
+			//Sound effect
+			ball.scene.sound.play('squish');
 			
 			//Re-enable ball body
 			setTimeout(() => {
