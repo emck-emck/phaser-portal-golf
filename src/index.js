@@ -5,6 +5,7 @@ import MenuScene from './scenes/MenuScene.js';
 import GameScene from './scenes/GameScene.js';
 import WinScene from './scenes/WinScene.js';
 import InstructionsMenuScene from './scenes/InstructionsMenuScene.js';
+import LeaderboardScene from './scenes/LeaderboardScene.js';
 import PauseMenuScene from './scenes/PauseMenuScene.js';
 
 //Magic Phaser3 Configuration Stuff
@@ -27,7 +28,7 @@ const config = {
             maxPhysicsSteps: 1, // Max number of physics steps per frame
         }
     },
-	scene: [MenuScene, GameScene, WinScene, InstructionsMenuScene, PauseMenuScene]
+	scene: [MenuScene, GameScene, WinScene, InstructionsMenuScene, LeaderboardScene, PauseMenuScene]
 };
 
 //RUNS THE GAME

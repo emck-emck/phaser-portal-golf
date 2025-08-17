@@ -1,0 +1,87 @@
+<div class="overlay">
+	<div class="overlay-container">
+		<h3>GAME OVER</h3>
+		<div id="stats">
+			<h3 id="coursepar"></h3>
+			<h3 id="putt"></h3>
+			<h3 id="time"></h3>
+		</div>
+		<h3>Record your score?</h3>
+		<div id="inputWrapper">
+			<h3 id="inputLabel">NAME: </h3>
+			<input id="nameinput" type="text" maxlength="10"/>
+		</div>
+		<div id="buttonWrapper">
+			<button id="submit">Submit</button>
+			<button id="quit">No thanks</button>
+		</div>
+	</div>
+</div>
+
+<style>
+	#submit, #quit {
+		margin: 10px;
+	}
+
+	#inputWrapper {
+		display: flex;
+		align-items: stretch;
+		gap: 10px;
+	}
+
+	#inputLabel {
+		margin: 0;
+		padding: 0.5em 1em; /* Relative to font size */
+		border-radius: 5px;
+		display: flex;
+		align-items: center; /* Ensures text stays vertically aligned */
+	}
+
+	#nameInput {
+		font-size: 1em; /* Match the font size of the header */
+		padding: 0.5em 1em; /* Same padding as the header */
+		border-radius: 5px;
+		height: auto; /* Let the browser decide based on padding */
+		display: flex;
+		align-items: center;
+	}
+
+	#buttonWrapper {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#stats h3{
+		margin: 0px;
+	}
+
+	.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 9999;
+	}
+
+	.overlay-container {
+		background: white;
+		padding: 20px;
+		border-radius: 10px;
+		text-align: center;
+		border: 2px solid rgb(0, 0, 0);
+`		display: flex;
+		flex-direction column;
+		align-items: center;
+		font-family: monospace;
+	}
+
+	button {
+		font-family: monospace;
+	}
+
+</style>

@@ -16,6 +16,7 @@ export default class MenuListener {
     }
 
 	fullscreen(key){
+		this.scene.scale.fullscreenTarget = document.body;
 		if(!this.isFDown){
 			this.isFDown = true;
 			if (!this.scene.scale.isFullscreen) {
