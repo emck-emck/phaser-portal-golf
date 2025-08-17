@@ -5,9 +5,17 @@ import { fileURLToPath } from 'url';
 // Get __filename and __dirname equivalents
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Allow CORS for local testing
+app.use(cors({
+    origin: '*', // Change this to specific domains if needed
+    methods: 'GET,POST,OPTIONS',
+    allowedHeaders: 'Content-Type'
+}));
 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')));

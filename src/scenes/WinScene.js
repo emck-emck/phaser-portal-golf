@@ -11,6 +11,8 @@ class WinScene extends Phaser.Scene {
 		this.holeId = data.holeId;
 		this.totalStrokes = data.totalStrokes;
 		this.strokes = data.strokes;
+		this.totalTime = data.totalTime;
+		this.time = data.time;
 		this.par = data.par;
 	}
 
@@ -26,6 +28,7 @@ class WinScene extends Phaser.Scene {
 		var background = new Image();
 		background.src = ASSET_FILEPATH_WIN + 'win_bg.png';
 		background.onload = () => {
+			const s = this;
 			//Set variables for item placement in scene
 			const swidth = this.scale.width;
 			const sheight = this.scale.height;
@@ -47,10 +50,13 @@ class WinScene extends Phaser.Scene {
 		
 			if(this.holeId < MAP_INFO.length - 1){
 				//Print game statistics
+				const timex = swidth/2;
+				const timey = bgy + bheight * 0.2;
 				const strokesx = swidth/2;
-				const strokesy = bgy + bheight * 0.2;
+				const strokesy = (bgy + bheight * 0.2) + fontSize + 5;
 				const parx = swidth/2;
-				const pary = (bgy + bheight * 0.2) + fontSize + 5;
+				const pary = (bgy + bheight * 0.2) + (fontSize*2) + 5;
+				this.add.text(timex, timey, 'Time: ' + formatTime(this.time), textStyle).setOrigin(0.5)
 				this.add.text(strokesx, strokesy, 'Sunk in ' + this.strokes, textStyle).setOrigin(0.5);
 				this.add.text(parx, pary, 'Par: ' + this.par, textStyle).setOrigin(0.5);
 
@@ -66,20 +72,39 @@ class WinScene extends Phaser.Scene {
 				const quitButton = this.add.image(quitx, quity, 'quitButton').setInteractive();
 				quitButton.on('pointerdown', this.quit, this);
 			}else{
-				//Print final game statistics
-				const strokesx = swidth/2;
-				const strokesy = bgy + bheight * 0.2;
-				const parx = swidth/2;
-				const pary = (bgy + bheight * 0.2) + fontSize + 5;
-				const totalPar = MAP_INFO.reduce((totalPar, hole) => totalPar + hole.par, 0);
-				this.add.text(strokesx, strokesy, 'Completed in ' + this.totalStrokes + ' strokes', textStyle).setOrigin(0.5);
-				this.add.text(parx, pary, 'Course Par ' + totalPar + ' strokes', textStyle).setOrigin(0.5);
+				fetch('./html/scoresubmit.html')
+					.then(response => response.text())
+					.then(html => {
+						// Insert score submit HTML
+						let div = document.createElement('div');
+						div.innerHTML = html;
+						div.id = "submit";
+						document.body.appendChild(div);
 
-				//Quit button
-				const quitx = bgx + bwidth * 0.5;
-				const quity = bgy + bheight * 0.8;
-				const quitButton = this.add.image(quitx, quity, 'quitButton').setInteractive();
-				quitButton.on('pointerdown', this.quit, this);
+						// Populate HTML with final statistics
+						const coursepar = MAP_INFO.reduce((totalPar, hole) => totalPar + hole.par, 0);
+						const totalStrokes = s.totalStrokes;
+						const time = formatTime(s.totalTime);
+						document.getElementById('coursepar').innerText = "Course Par: " + coursepar;
+						document.getElementById('putt').innerText = "Completed in: " + totalStrokes;
+						document.getElementById('time').innerText = "Total Time: " + time;
+
+						// Link actions to buttons
+						let quitButton = document.getElementById('quit');
+						if (quitButton) {
+							quitButton.addEventListener('click', () => {
+								mainMenu(s);
+							});
+						}
+
+						let sendButton = document.getElementById('submit');
+						if (sendButton) {
+							sendButton.addEventListener('click', () => {
+								sendScore(s, totalStrokes, time);
+							});
+						}
+					})
+					.catch(error => console.error('Error loading overlay:', error));
 			}
 
 			const listener = new MenuListener(this);
@@ -88,7 +113,7 @@ class WinScene extends Phaser.Scene {
 
 	nextLevel(){
 		this.scene.stop();
-		this.scene.start('GameScene', {holeId: (this.holeId + 1), totalStrokes: this.totalStrokes});
+		this.scene.start('GameScene', {holeId: (this.holeId + 1), totalStrokes: this.totalStrokes, totalTime: this.totalTime});
 	}
 
 	quit(){
@@ -96,6 +121,47 @@ class WinScene extends Phaser.Scene {
 		this.scene.stop('GameScene');
 		this.scene.start('MenuScene');
 	}
+}
+
+function formatTime(time){
+	let totalSeconds = Math.floor(time / 1000);
+	let minutes = Math.floor((totalSeconds % 3600) / 60);
+	let seconds = totalSeconds % 60;
+
+	return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function mainMenu(scene){
+	var sub = document.getElementById('submit');
+	if(sub){
+		sub.remove();
+	}
+
+	scene.scene.stop();
+	scene.scene.stop('GameScene');
+	scene.scene.start('MenuScene');
+}
+
+function sendScore(scene, p, t){
+	var n = document.getElementById('nameinput').value;
+	console.log(n);
+	if(n.length == 0) return;
+	fetch('https://pg-leaderboard-worker.portal-golf.workers.dev/newscore', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			name: n,
+			putt: p,
+			time: t,
+			date: new Date().toISOString().slice(0, 10)
+		})
+	})
+	.then(response => response.json())
+	.then(data => console.log('Success:', data))
+	.catch(error => console.error('Error:', error));
+	mainMenu(scene);
 }
 
 export default WinScene;
