@@ -39,6 +39,7 @@ export const ASSET_FILEPATH_GAME = '/assets/images/game/';
 export const ASSET_FILEPATH_GAME_MAP = '/assets/maps/';
 export const ASSET_FILEPATH_GAME_SOUND = '/assets/mp3/';
 export const ASSET_FILEPATH_INSTRUCTIONS = '/assets/images/instructions/';
+export const ASSET_FILEPATH_LEVEL_SELECT = '/assets/images/levelselect/';
 export const ASSET_FILEPATH_LEADERBOARD = '/assets/images/leaderboard/';
 export const ASSET_FILEPATH_MENU = '/assets/images/startmenu/';
 export const ASSET_FILEPATH_PAUSE = '/assets/images/pause/';

@@ -71,7 +71,7 @@ class InstructionsMenuScene extends Phaser.Scene {
 			const backButton = this.add.image(backx, backy, 'backButton').setInteractive();
 			backButton.on('pointerdown', this.back, this);
 			
-			this.changePage(0)
+			this.changePage(0);
 			const listener = new MenuListener(this);
 		};
     }
