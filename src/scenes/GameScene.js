@@ -29,6 +29,7 @@ class GameScene extends Phaser.Scene {
 		this.holeId = data.holeId;
 		this.totalStrokes = data.totalStrokes;
 		this.totalTime = data.totalTime;
+		this.isFullGame = data.isFullGame;
 		this.holeName = MAP_INFO[data.holeId].name;
 		this.par = MAP_INFO[data.holeId].par;
 		this.holeDisplayName = MAP_INFO[data.holeId].display_name;
@@ -491,7 +492,8 @@ class GameScene extends Phaser.Scene {
 										strokes: this.strokes, 
 										par: this.par,
 										totalTime: this.totalTime + this.holeTime,
-										time: this.holeTime
+										time: this.holeTime,
+										isFullGame: this.isFullGame
 		});
 	}
 

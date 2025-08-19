@@ -30,7 +30,7 @@ class MenuScene extends Phaser.Scene {
     }
 
 	startGame(){
-		this.scene.start('GameScene', {holeId: 0, totalStrokes: 0, totalTime: 0});
+		this.scene.start('GameScene', {holeId: 0, totalStrokes: 0, totalTime: 0, isFullGame: true});
 		this.scene.stop('MenuScene');
 	}
 

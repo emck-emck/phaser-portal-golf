@@ -18,6 +18,11 @@ class LevelSelectScene extends Phaser.Scene {
     }
 
     create(){
+		const textStyle = {
+			fontSize: '36px', 
+			fill: '#ffffff'
+		};
+
 		//Load the background image so we can get image dimensions
 		var background = new Image();
 		background.src = ASSET_FILEPATH_LEVEL_SELECT + 'level_select_bg.png';
@@ -38,6 +43,9 @@ class LevelSelectScene extends Phaser.Scene {
 			//Add background image
 			this.add.image(swidth/2, sheight/2, 'levelselectbg');
 
+			//Add page title
+			this.add.text(swidth/2, bgy + bheight * 0.1, "Level Select", textStyle).setOrigin(0.5, 0.5);
+
 			//Add level select display
 			var imgY = bgy + bheight * 0.3;
 			var imgX;
@@ -45,13 +53,13 @@ class LevelSelectScene extends Phaser.Scene {
 				imgX = swidth/2 - 250;
 				for(var j = 0; j < 3; j++){
 					var temp = this.add.image(imgX, imgY,(j + (i*3)).toString());
-					temp.setScale(0.15, 0.15);
+					temp.setScale(0.3);
 					temp.setInteractive();
 					temp.setData({type: 'img', imgid: (j + (i*3))});
 					this.imgs.push(temp);
 					imgX = imgX + 250;
 				}
-				imgY = imgY + 150;
+				imgY = imgY + 175;
 			}
 
 			// Image listener
@@ -101,11 +109,13 @@ class LevelSelectScene extends Phaser.Scene {
 	}
 
 	playHole(pointer, obj){
-		if(obj.data){
-			var h = (this.page*6) + obj.getData('imgid');
-			this.scene.start('GameScene', {holeId: h, totalStrokes: 0, totalTime: 0});
-			this.scene.stop('MenuScene');
-			this.scene.stop('LevelSelect');
+		if(obj.data && obj.texture){
+			if(obj.texture.key != 'blank'){
+				var h = (this.page*6) + obj.getData('imgid');
+				this.scene.start('GameScene', {holeId: h, totalStrokes: 0, totalTime: 0, isFullGame: false});
+				this.scene.stop('MenuScene');
+				this.scene.stop('LevelSelect');
+			}
 		}
 	}
 }
