@@ -40,3 +40,27 @@ export function doFriction(obj){
 		obj.setVelocity(obj.body.velocity.x * FRICTION, obj.body.velocity.y * FRICTION);
 	}
 }
+
+//Returns the adjusted asset path directory name for the given relative path (written by ChatGPT, 08-19-2025)
+export function getAssetPath(relativePath) {
+	// Detect if hosted on GitHub Pages
+	const pathParts = window.location.pathname.split("/").filter(Boolean);
+  
+	// If the URL looks like /username.github.io/repo-name/...
+	// then pathParts[0] is the repo name
+	const repoName = pathParts.length > 0 ? pathParts[0] : "";
+
+	// If running locally (e.g. http://localhost:8080/), repoName will be empty
+	if(repoName && window.location.hostname.endsWith("github.io")) {
+		return `/${repoName}/${relativePath}`;
+	}else{
+		return relativePath; // local dev, just use plain relative path
+	}
+}
+
+// Adjusts image paths for HTML objects (written by ChatGPT, 08-19-2025)
+export function fixAssetPaths(container) {
+  container.querySelectorAll("img[data-src]").forEach(img => {
+    img.src = getAssetPath(img.getAttribute("data-src"));
+  });
+}

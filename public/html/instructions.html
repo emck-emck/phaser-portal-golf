@@ -1,0 +1,106 @@
+<div class="overlay">
+	<div class="overlay-container">
+		<h3>HOW TO PLAY</h3>
+		<div class="ins-container" id="web">
+			<div class="page" id="page1">
+				<h2>OVERVIEW</h2>
+				<p>This is a mini-golf simulator that allows for the use of teleportation portals.</p>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page2">
+				<h2>PUTTING</h2>
+				<p>Use the left mouse button to putt the ball</p>
+				<p>Click and hold on the screen and drag in the direction opposite where you want the ball to go, then release.</p>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page3">
+				<h2>PORTALS</h2>
+				<p>Use Q to shoot the orange portal and E to shoot the blue portal.</p>
+				<p>Going through one portal brings you out the other portal.</p>
+				<p>Portals can only be shot on to white walls.</p>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page4">
+				<h2>PORTALS</h2>
+				<p>The ball must have line of sight to the wall you want to place a portal on.</p>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page5">
+				<h2>OTHER CONTROLS</h2>
+				<p>Press W to cancel a putt.</p>
+				<p>Press F to toggle Full Screen mode.</p>
+				<p>Press P to pause the game.</p>
+			</div>
+			<div class="page" id="page6">
+				<h2>HAZARDS</h2>
+				<p>Sand: Slows ball significantly.</p>
+				<p>Water: Sinks ball; ball returns to previous putt position.</p>
+				<img data-src=""/>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page7">
+				<h2>ITEMS: CUBE</h2>
+				<p>Push the ball into a cube to move the cube on a horizontal or vertical axis.</p>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page8">
+				<h2>ITEMS: PRESSURE PLATE</h2>
+				<p>Putt the ball or move an item onto a pressure plate to trigger an event.</p>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page9">
+				<h2>ITEMS: OTHER</h2>
+				<p>Other items include:</p>
+				<p>Moving Walls</p>
+				<p>Disappearing Walls</p>
+				<p>Bridges</p>
+				<img data-src=""/>
+				<img data-src=""/>
+				<img data-src=""/>
+			</div>
+			<div class="page" id="page10">
+				<h2>OBJECTIVE</h2>
+				<p>Complete the course in as few strokes and as little time as possible!</p>
+				<img data-src=""/>
+			</div>
+		</div>
+		<button id="prev">PREV</button>
+		<button id="back">BACK</button>
+		<button id="next">NEXT</button>
+	</div>
+</div>
+
+<style>
+	#back {
+		margin: 10px;
+	}
+
+	.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 9999;
+	}
+
+	.overlay-container {
+		background: white;
+		padding: 20px;
+		border-radius: 10px;
+		text-align: center;
+		border: 2px solid rgb(0, 0, 0);
+`		display: flex;
+		flex-direction column;
+		align-items: center;
+		font-family: monospace;
+	}
+
+	.overlay-content {
+		width: 100%;
+		border-collapse: collapse;
+	}
+</style>
