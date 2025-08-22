@@ -8,20 +8,12 @@ class InstructionsMenuScene extends Phaser.Scene {
     }
 
     preload(){
-		this.load.image('instructionsbg', ASSET_FILEPATH_INSTRUCTIONS + 'instructions_bg.png');
-        this.load.image('nextButton', ASSET_FILEPATH_INSTRUCTIONS + 'next.png');
-        this.load.image('prevButton', ASSET_FILEPATH_INSTRUCTIONS + 'prev.png');
-        this.load.image('backButton', ASSET_FILEPATH_INSTRUCTIONS + 'back.png');
+		
     }
 
     create(){
 		this.page = 0;
 		this.pages = [];
-
-		//Add background image
-		const swidth = this.scale.width;
-		const sheight = this.scale.height;
-		this.add.image(swidth/2, sheight/2, 'instructionsbg');
 		
 		//Load the leaderboard HTML
 		fetch('./html/instructions.html')

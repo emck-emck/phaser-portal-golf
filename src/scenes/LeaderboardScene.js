@@ -7,19 +7,11 @@ class LeaderboardScene extends Phaser.Scene {
     }
 
     preload(){
-		this.load.image('leaderbordScreen', ASSET_FILEPATH_LEADERBOARD + 'leaderboard_bg.png');
+		
     }
 
     create(){
 		const s = this;
-
-		//Set variables for item placement in scene
-		const swidth = this.scale.width;
-		const sheight = this.scale.height;
-		const borderwidth = 5;
-
-		//Add background image
-		this.add.image(swidth/2, sheight/2, 'leaderbordScreen');
 
 		//Load the leaderboard HTML
 		fetch('./html/leaderboard.html')
