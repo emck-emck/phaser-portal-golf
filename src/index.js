@@ -34,3 +34,6 @@ const config = {
 
 //RUNS THE GAME
 const game = new Phaser.Game(config);
+
+//Injects the canvas element into a div for styling purposes
+document.getElementById("gameWrapper").appendChild(game.canvas);

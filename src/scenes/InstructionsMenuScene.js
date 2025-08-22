@@ -30,7 +30,7 @@ class InstructionsMenuScene extends Phaser.Scene {
 				let div = document.createElement('div');
 				div.innerHTML = html;
 				div.id = "instructions";
-				document.body.appendChild(div);
+				document.getElementById("gameWrapper").appendChild(div);
 
 				this.pages = document.querySelectorAll(".page");
 				fixAssetPaths(document.getElementById('instructions'));

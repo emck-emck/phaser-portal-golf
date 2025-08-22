@@ -1,6 +1,6 @@
 //Map info
 export const MAP_INFO = [
-							// {name: 'sandbox', display_name: 'Sandbox', par: 99},
+							// {name: 'sandbox', display_name: 'Hole 1', par: 3},
 							{name: 'hole_1', display_name: 'Hole 1', par: 3},
 							{name: 'hole_2', display_name: 'Hole 2', par: 4},
 							{name: 'hole_3', display_name: 'Hole 3', par: 5},
