@@ -1,5 +1,4 @@
 //Imports
-import Phaser from 'phaser';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from './utils/constants.js';
 import MenuScene from './scenes/MenuScene.js';
 import GameScene from './scenes/GameScene.js';

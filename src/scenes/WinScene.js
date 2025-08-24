@@ -21,7 +21,7 @@ class WinScene extends Phaser.Scene {
         // Load any assets needed for the win menu
 		this.load.image('winbg', ASSET_FILEPATH_WIN + 'win_bg.png');
         this.load.image('wNextButton', ASSET_FILEPATH_WIN + 'win_next.png');
-        this.load.image('quitButton', ASSET_FILEPATH_WIN + 'quit.png');
+        this.load.image('quitButton', ASSET_FILEPATH_WIN + 'win_quit.png');
     }
 
     create(){
