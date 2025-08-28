@@ -30,11 +30,11 @@ class LeaderboardScene extends Phaser.Scene {
 						var append = '';
 						for(var i = 0; i < scores.length; i++){
 							append = append + "<tr>";
-							append = append + "<td>" + scores.rank + "</td>";
-							append = append + "<td>" + scores.name + "</td>";
-							append = append + "<td>" + scores.putt + "</td>";
-							append = append + "<td>" + scores.time + "</td>";
-							append = append + "<td>" + scores.date + "</td>";
+							append = append + "<td>" + scores[i].rank + "</td>";
+							append = append + "<td>" + scores[i].name + "</td>";
+							append = append + "<td>" + scores[i].putt + "</td>";
+							append = append + "<td>" + scores[i].time + "</td>";
+							append = append + "<td>" + scores[i].date + "</td>";
 							append = append + "</tr>";
 						}
 						scoresObj.innerHTML = append;
