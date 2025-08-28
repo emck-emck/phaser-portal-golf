@@ -8,8 +8,8 @@ class PauseMenuScene extends Phaser.Scene {
 
     preload() {
         this.load.image('pausebg', ASSET_FILEPATH_PAUSE + 'pause_bg.png');
-        this.load.image('resumeButton', ASSET_FILEPATH_PAUSE + 'resume.png');
-        this.load.image('quitButton', ASSET_FILEPATH_PAUSE + 'quit.png');
+        this.load.image('resumeButton', ASSET_FILEPATH_PAUSE + 'pause_resume.png');
+        this.load.image('pauseQuitButton', ASSET_FILEPATH_PAUSE + 'pause_quit.png');
     }
 
     create() {
@@ -46,8 +46,8 @@ class PauseMenuScene extends Phaser.Scene {
 			//Quit button
 			const quitx = bgx + bwidth * 0.75;
 			const quity = bgy + bheight * 0.8;
-			const quitButton = this.add.image(quitx, quity, 'quitButton').setInteractive();
-			quitButton.on('pointerdown', this.quitGame, this);
+			const pQuitButton = this.add.image(quitx, quity, 'pauseQuitButton').setInteractive();
+			pQuitButton.on('pointerdown', this.quitGame, this);
 
 			const listener = new PauseMenuListener(this);
 		};

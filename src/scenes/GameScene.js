@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import Listener from '../handlers/Listener.js';
 
 //Sprite class import
@@ -29,6 +27,7 @@ class GameScene extends Phaser.Scene {
 		this.holeId = data.holeId;
 		this.totalStrokes = data.totalStrokes;
 		this.totalTime = data.totalTime;
+		this.isFullGame = data.isFullGame;
 		this.holeName = MAP_INFO[data.holeId].name;
 		this.par = MAP_INFO[data.holeId].par;
 		this.holeDisplayName = MAP_INFO[data.holeId].display_name;
@@ -41,8 +40,12 @@ class GameScene extends Phaser.Scene {
 		this.ppGroup = null;
 
 		//Menu bar items
+		this.isMobile = this.sys.game.device.os.android || this.sys.game.device.os.iOS; // For Phone UI
 		this.powerBar = null;
 		this.indicator = null;
+		this.bPortalIcon = null;
+		this.oPortalIcon = null;
+		this.pauseIcon = null;
 		this.parText = null;
 		this.strokesText = null;
 		this.holeNameText = null;
@@ -77,6 +80,9 @@ class GameScene extends Phaser.Scene {
 		//Game bar objects
 		this.load.image('powerbar', ASSET_FILEPATH_GAME +  'powerbar.png');
 		this.load.image('indicator', ASSET_FILEPATH_GAME +  'indicator.png');
+		this.load.image('bportalicon', ASSET_FILEPATH_GAME +  'blueportalicon.png');
+		this.load.image('oportalicon', ASSET_FILEPATH_GAME +  'orangeportalicon.png');
+		this.load.image('pauseicon', ASSET_FILEPATH_GAME +  'pauseicon.png');
 		//Game objects
 		this.load.image('ball', ASSET_FILEPATH_GAME +  'ball.png');
 		this.load.image('cube', ASSET_FILEPATH_GAME +  'cube.png');
@@ -491,11 +497,15 @@ class GameScene extends Phaser.Scene {
 										strokes: this.strokes, 
 										par: this.par,
 										totalTime: this.totalTime + this.holeTime,
-										time: this.holeTime
+										time: this.holeTime,
+										isFullGame: this.isFullGame
 		});
 	}
 
 	createMenuBar() {
+		const barXCenter = this.cameras.main.width/2;
+		const barYCenter = MENU_BAR_HEIGHT/2;
+
         //Create a rectangle to serve as the background of the menu bar
         this.add.rectangle(0, 0, this.cameras.main.width, MENU_BAR_HEIGHT, 0x000000).setOrigin(0, 0);
 
@@ -513,6 +523,16 @@ class GameScene extends Phaser.Scene {
 		this.timeText = this.add.text(10, 34, 'Time: ' + this.holeTime, { fontSize: MENU_FONT_SIZE, fill: '#fff' })
 		this.holeNameText = this.add.text(870, 10, this.holeDisplayName, { fontSize: MENU_FONT_SIZE, fill: '#fff' });
         this.parText = this.add.text(870, 34, 'Par: ' + this.par, { fontSize: MENU_FONT_SIZE, fill: '#fff' });
+
+		//Phone controls
+		if(this.isMobile){
+			this.bPortalIcon = this.add.sprite(barXCenter, barYCenter, 'bportalicon').setInteractive({ useHandCursor: true });
+			this.bPortalIcon.setData({name: 'b'});
+			this.oPortalIcon = this.add.sprite(barXCenter + 32, barYCenter, 'oportalicon').setInteractive({ useHandCursor: true });
+			this.oPortalIcon.setData({name: 'o'});
+			this.pauseIcon = this.add.sprite(barXCenter + 64, barYCenter, 'pauseicon').setInteractive({ useHandCursor: true });
+			this.pauseIcon.setData({name: 'p'});
+		}
 
         // Ensure the menu bar is always on top
         this.children.bringToTop(this.scoreText);

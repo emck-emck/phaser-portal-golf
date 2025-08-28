@@ -1,6 +1,6 @@
 //Map info
 export const MAP_INFO = [
-							// {name: 'sandbox', display_name: 'Sandbox', par: 99},
+							// {name: 'sandbox', display_name: 'Hole 1', par: 3},
 							{name: 'hole_1', display_name: 'Hole 1', par: 3},
 							{name: 'hole_2', display_name: 'Hole 2', par: 4},
 							{name: 'hole_3', display_name: 'Hole 3', par: 5},
@@ -39,6 +39,7 @@ export const ASSET_FILEPATH_GAME = '/assets/images/game/';
 export const ASSET_FILEPATH_GAME_MAP = '/assets/maps/';
 export const ASSET_FILEPATH_GAME_SOUND = '/assets/mp3/';
 export const ASSET_FILEPATH_INSTRUCTIONS = '/assets/images/instructions/';
+export const ASSET_FILEPATH_LEVEL_SELECT = '/assets/images/levelselect/';
 export const ASSET_FILEPATH_LEADERBOARD = '/assets/images/leaderboard/';
 export const ASSET_FILEPATH_MENU = '/assets/images/startmenu/';
 export const ASSET_FILEPATH_PAUSE = '/assets/images/pause/';

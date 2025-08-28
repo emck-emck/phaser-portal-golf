@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import PortalP from './PortalP.js';
 import {isEmpty} from '../utils/portalUtils.js';
 import {doFriction} from '../utils/utils.js';

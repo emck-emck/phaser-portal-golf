@@ -5,6 +5,26 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" type="image/x-icon" href="./pg.ico"></link>
 	<title>Portal Golf</title>
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			height: 100%;
+			width: 100%;
+		}
+		#gameWrapper {
+		    position: relative;
+		}
+		canvas {
+			display: block;
+			margin: 0 auto;
+		}
+	</style>
+	<script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
 </head>
-<body></body>
+<body>
+	<script type="module" src="./index.js"></script>
+	<div id="gameWrapper"></div>
+</body>
 </html>

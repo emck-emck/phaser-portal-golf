@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import {portalPlacement} from '../utils/portalUtils.js';
 import {PROJECTILE, COLLISION_DEBOUNCE_TIME} from '../utils/constants.js'
 import Portal from './Portal.js';

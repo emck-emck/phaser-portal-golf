@@ -1,53 +1,75 @@
-import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import webpack from 'webpack';
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import webpack from "webpack";
+
+const __dirname = path.resolve(); // Needed in ES modules
 
 export default {
-  entry: './src/index.js',
+  entry: "./src/index.js",
+
   output: {
-    filename: 'bundle.js',
-    path: path.resolve('dist'), // Ensure this points to the correct directory
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "", // ensures relative paths for assets
   },
+
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
         },
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader',
-        ],
+        test: /\.(png|svg|jpg|gif)$/i,
+        type: "asset/resource", // modern replacement for file-loader
+        generator: {
+          filename: "assets/[name][ext]",
+        },
       },
       {
         test: /\.html$/,
-        use: [
-          'html-loader',
-        ],
+        use: ["html-loader"],
       },
     ],
   },
+
   plugins: [
     new CleanWebpackPlugin(),
+
+    // Generates dist/index.html that pulls in bundle.js
     new HtmlWebpackPlugin({
-      template: './src/index.html', // Ensure this points to your source HTML file
-      filename: 'index.html', // The output file name in the dist folder
-      inject: 'body',
+      template: "./src/index.html",
+      filename: "index.html",
+      inject: "body",
     }),
-    new webpack.HotModuleReplacementPlugin(), // Add this plugin
+
+    // Copies static assets (e.g. images, audio, json, etc.) from /public to /dist
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "public",
+          to: ".",
+          noErrorOnMissing: true,
+        },
+      ],
+    }),
+
+    new webpack.HotModuleReplacementPlugin(),
   ],
+
   devServer: {
     static: {
-      directory: path.resolve('public'), // Serve static files from the dist directory
+      directory: path.resolve(__dirname, "dist"), // serve from dist
     },
     compress: true,
     port: 9000,
-    hot: true, // Enable hot module replacement
+    hot: true
   },
-  mode: 'development',
+
+  mode: "development",
 };

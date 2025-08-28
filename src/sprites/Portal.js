@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import {HORIZONTAL, VERTICAL} from '../utils/constants.js';
 import {getObjectRotation, isEmpty, teleportObject, teleportMWall, setObjectVelocityAfterPortal} from '../utils/portalUtils.js';
 import {setPortalWallColliders} from '../utils/wallUtils.js';

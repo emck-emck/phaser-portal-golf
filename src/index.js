@@ -1,10 +1,10 @@
 //Imports
-import Phaser from 'phaser';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from './utils/constants.js';
 import MenuScene from './scenes/MenuScene.js';
 import GameScene from './scenes/GameScene.js';
 import WinScene from './scenes/WinScene.js';
 import InstructionsMenuScene from './scenes/InstructionsMenuScene.js';
+import LevelSelectScene from './scenes/LevelSelectScene.js';
 import LeaderboardScene from './scenes/LeaderboardScene.js';
 import PauseMenuScene from './scenes/PauseMenuScene.js';
 
@@ -12,11 +12,11 @@ import PauseMenuScene from './scenes/PauseMenuScene.js';
 const config = {
 	parent: 'game-container',
 	type: Phaser.AUTO,
-	width: SCREEN_WIDTH,
-	height: SCREEN_HEIGHT,
 	scale: {
         mode: Phaser.Scale.FIT,   // Ensures the game scales to fit the screen
         autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game
+		width: SCREEN_WIDTH,
+		height: SCREEN_HEIGHT
     },
 	physics: {
         default: 'arcade',
@@ -28,8 +28,11 @@ const config = {
             maxPhysicsSteps: 1, // Max number of physics steps per frame
         }
     },
-	scene: [MenuScene, GameScene, WinScene, InstructionsMenuScene, LeaderboardScene, PauseMenuScene]
+	scene: [MenuScene, GameScene, WinScene, InstructionsMenuScene, LeaderboardScene, LevelSelectScene, PauseMenuScene]
 };
 
 //RUNS THE GAME
 const game = new Phaser.Game(config);
+
+//Injects the canvas element into a div for styling purposes
+document.getElementById("gameWrapper").appendChild(game.canvas);
