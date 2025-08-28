@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import {doFriction} from '../utils/utils.js';
 import {getCollisionSide} from '../utils/wallUtils.js'
 import {DESTROY_THRESHOLD} from '../utils/constants.js';

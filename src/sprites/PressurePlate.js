@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import Bridge from './Bridge.js';
 import DisappearingWall from './DisappearingWall.js';
 

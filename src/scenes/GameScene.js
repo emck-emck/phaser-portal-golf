@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import Listener from '../handlers/Listener.js';
 
 //Sprite class import

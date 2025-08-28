@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import {DESTROY_THRESHOLD, TIMEOUT, TIMEOUT_LONG} from '../utils/constants.js';
 
 export default class MovingWall extends Phaser.Physics.Arcade.Sprite {

@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 export default class DisappearingWall extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y, code) {

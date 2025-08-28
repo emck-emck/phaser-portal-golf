@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import {PORTAL_ORANGE, PORTAL_BLUE} from '../utils/constants.js';
 
 export default class Listener {

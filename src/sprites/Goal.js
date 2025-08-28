@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import {GOAL_BALL_THRESHOLD, GOAL_MAGNETIC_PULL, GOAL_MAGNET_RANGE} from '../utils/constants.js';
 
 export default class Goal extends Phaser.Physics.Arcade.Sprite {
