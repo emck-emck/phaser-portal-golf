@@ -57,6 +57,9 @@ class GameScene extends Phaser.Scene {
 		//Helper
 		this.win = false;
 		this.powerBarActive = false;
+		//Mobile mode selector
+		//0 is shoot, 1 is orange, 2 is blue
+		this.mode = 0;
 	}
 
     preload() {
@@ -81,7 +84,9 @@ class GameScene extends Phaser.Scene {
 		this.load.image('powerbar', ASSET_FILEPATH_GAME +  'powerbar.png');
 		this.load.image('indicator', ASSET_FILEPATH_GAME +  'indicator.png');
 		this.load.image('bportalicon', ASSET_FILEPATH_GAME +  'blueportalicon.png');
+		this.load.image('bportalicons', ASSET_FILEPATH_GAME +  'blueportaliconselected.png');
 		this.load.image('oportalicon', ASSET_FILEPATH_GAME +  'orangeportalicon.png');
+		this.load.image('oportalicons', ASSET_FILEPATH_GAME +  'orangeportaliconselected.png');
 		this.load.image('pauseicon', ASSET_FILEPATH_GAME +  'pauseicon.png');
 		//Game objects
 		this.load.image('ball', ASSET_FILEPATH_GAME +  'ball.png');
@@ -455,6 +460,19 @@ class GameScene extends Phaser.Scene {
 			this.indicator.setVisible(false);
 		}else{
 			this.indicator.setVisible(true);
+		}
+		// Mobile icons update
+		if(this.isMobile){
+			if(this.mode == 1){
+				this.oPortalIcon.setTexture('oportalicons');
+			}else{
+				this.oPortalIcon.setTexture('oportalicon');
+			}
+			if(this.mode == 2){
+				this.bPortalIcon.setTexture('bportalicons');
+			}else{
+				this.bPortalIcon.setTexture('bportalicon');
+			}
 		}
 	}
 

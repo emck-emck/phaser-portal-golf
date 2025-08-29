@@ -3,10 +3,6 @@ import {PORTAL_ORANGE, PORTAL_BLUE} from '../utils/constants.js';
 export default class Listener {
 
     constructor(scene) {
-		//Mobile mode selector
-		//0 is shoot, 1 is orange, 2 is blue
-		this.mode = 0;
-
 		//Class variables
 		this.scene = scene;
 		this.ball = scene.ball;
@@ -66,39 +62,39 @@ export default class Listener {
 			const target = clicked[0];
 			if(target.data.list.name){
 				if(target.data.list.name == 'o'){ //Orange portal
-					if(this.mode == 1){
-						this.mode = 0;
+					if(this.scene.mode == 1){
+						this.scene.mode = 0;
 					}else{
-						this.mode = 1;
+						this.scene.mode = 1;
 					}
 				}else if(target.data.list.name == 'b'){ //Blue portal
-					if(this.mode == 2){
-						this.mode = 0;
+					if(this.scene.mode == 2){
+						this.scene.mode = 0;
 					}else{
-						this.mode = 2;
+						this.scene.mode = 2;
 					}
 				}else if(target.data.list.name == 'p'){ //Pause button
-					this.mode = 0;
+					this.scene.mode = 0;
 					this.pauseGame();
 				}
 			}
-		}else{ //All other clicks (should be all desktop gameplay)
+		}else{ //All other clicks
 			if(pointer.y < 64){ // Omits menu bar clicks
 				return;
 			}
-			if(this.mode == 0){
+			if(this.scene.mode == 0){
 				if(!this.ball.isBallMoving()){
 					this.ball.mouseDownCoords = {x: Math.floor(pointer.x), y: Math.floor(pointer.y)};
 					this.scene.powerBarActive = true;
 				}
-			}else if(this.mode == 1){
+			}else if(this.scene.mode == 1){
 				this.onPortalShoot({code: 'KeyQ'});
 				this.isQDown = false;
-				this.mode = 0;
-			}else if(this.mode == 2){
+				this.scene.mode = 0;
+			}else if(this.scene.mode == 2){
 				this.onPortalShoot({code: 'KeyE'});
 				this.isEDown = false;
-				this.mode = 0;
+				this.scene.mode = 0;
 			}
 		}
 	}
