@@ -83,6 +83,9 @@ export default class Listener {
 				}
 			}
 		}else{ //All other clicks (should be all desktop gameplay)
+			if(pointer.y < 64){ // Omits menu bar clicks
+				return;
+			}
 			if(this.mode == 0){
 				if(!this.ball.isBallMoving()){
 					this.ball.mouseDownCoords = {x: Math.floor(pointer.x), y: Math.floor(pointer.y)};

@@ -526,11 +526,11 @@ class GameScene extends Phaser.Scene {
 
 		//Phone controls
 		if(this.isMobile){
-			this.bPortalIcon = this.add.sprite(barXCenter, barYCenter, 'bportalicon').setInteractive({ useHandCursor: true });
+			this.bPortalIcon = this.add.sprite(barXCenter - 150, barYCenter, 'bportalicon').setInteractive({ useHandCursor: true });
 			this.bPortalIcon.setData({name: 'b'});
-			this.oPortalIcon = this.add.sprite(barXCenter + 32, barYCenter, 'oportalicon').setInteractive({ useHandCursor: true });
+			this.oPortalIcon = this.add.sprite(barXCenter, barYCenter, 'oportalicon').setInteractive({ useHandCursor: true });
 			this.oPortalIcon.setData({name: 'o'});
-			this.pauseIcon = this.add.sprite(barXCenter + 64, barYCenter, 'pauseicon').setInteractive({ useHandCursor: true });
+			this.pauseIcon = this.add.sprite(barXCenter + 150, barYCenter, 'pauseicon').setInteractive({ useHandCursor: true });
 			this.pauseIcon.setData({name: 'p'});
 		}
 
